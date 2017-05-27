@@ -10,6 +10,13 @@ apply plugin: 'war'
 apply plugin: 'maven'
 
 war.archiveName "Q.war"
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'jcenter' for resolving your dependencies.
@@ -40,8 +47,11 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.0.9'
     compile 'ch.qos.logback:logback-core:1.0.9'
 
+    compile 'org.kaddiya:QClient:1.0.0-SNAPSHOT'
     // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+
+
 
 }
 
