@@ -1,4 +1,4 @@
-package org.kaddiya.Q.modules
+package org.kaddiya.QServer.modules
 
 import com.google.inject.AbstractModule
 import groovy.util.logging.Slf4j

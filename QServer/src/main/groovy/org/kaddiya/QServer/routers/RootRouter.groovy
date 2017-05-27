@@ -1,4 +1,4 @@
-package org.kaddiya.Q.routers
+package org.kaddiya.QServer.routers
 
 import restling.restlet.RestlingRouter
 

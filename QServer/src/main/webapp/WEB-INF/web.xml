@@ -7,7 +7,7 @@
         <servlet-class>restling.RestlingServlet</servlet-class>
         <init-param>
             <param-name>guice-module</param-name>
-            <param-value>org.kaddiya.Q.ApplicationModule</param-value>
+            <param-value>org.kaddiya.QServer.ApplicationModule</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

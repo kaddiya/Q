@@ -1,8 +1,8 @@
-package org.kaddiya.Q
+package org.kaddiya.QServer
 
 import groovy.util.logging.Slf4j
-import org.kaddiya.Q.modules.RMIModule
-import org.kaddiya.Q.routers.RootRouter
+import org.kaddiya.QServer.modules.RMIModule
+import org.kaddiya.QServer.routers.RootRouter
 import restling.guice.modules.RestlingApplicationModule
 
 
