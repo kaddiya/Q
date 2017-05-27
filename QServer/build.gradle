@@ -1,0 +1,54 @@
+
+group 'org.kaddiya'
+version '1.0.0-SNAPSHOT'
+// Apply the groovy plugin to add support for Groovy
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'war'
+apply plugin: 'maven'
+
+war.archiveName "Q.war"
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.akhikhl.gretty:gretty:1.4.0'
+    }
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    // We use the latest groovy 2.x version for building this library
+    compile 'org.codehaus.groovy:groovy-all:2.4.0'
+    compile 'com.google.inject:guice-parent:3.0'
+    compile 'restling:restling-core:0.0.7'
+
+    compile 'org.slf4j:slf4j-api:1.7.2'
+    // sfl4j is just a facade for loggers. To actually get logging to work, you need to
+    // tie it in with some actual implementation, e.g., logback
+    compile 'ch.qos.logback:logback-classic:1.0.9'
+    compile 'ch.qos.logback:logback-core:1.0.9'
+
+    // We use the awesome Spock testing and specification framework
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+
+}
+
+gretty {
+    systemProperties = System.properties
+    servletContainer = 'tomcat8'
+    contextPath = ""
+    serverConfigFile = "${projectDir}/server.xml"
+    managedClassReload = true
+}
