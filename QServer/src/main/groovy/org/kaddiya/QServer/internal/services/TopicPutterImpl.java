@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 @Slf4j
 @CompileStatic
-public class TopicPutterImpl implements  TopicPutter {
+public class TopicPutterImpl implements TopicPutter {
     @Override
     public boolean putInTopic(String topicId, Message m) {
         Topic t = Datastore.getTopicById(topicId);

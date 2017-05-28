@@ -14,7 +14,7 @@ class ConsumerController extends ServerResource {
 
 
     @Get
-    public String getMessage(){
+    public String getMessage() {
         String s = request.getAttributes().get("topicId")
         Topic t = Datastore.getTopicById(s);
         String mes = t.queue.take()

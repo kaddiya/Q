@@ -7,6 +7,7 @@ import org.kaddiya.QClient.models.PublishRequest
 import org.kaddiya.QServer.internal.models.Datastore
 import org.kaddiya.QServer.internal.services.TopicPutter
 import org.restlet.resource.Post
+import org.restlet.resource.ResourceException
 import org.restlet.resource.ServerResource
 
 /**
@@ -19,10 +20,14 @@ class PublisherController extends ServerResource {
     TopicPutter putter
 
     @Post
-    public Boolean publishMessage(PublishRequest req){
+    public Boolean publishMessage(PublishRequest req) {
         String topicId = req.getTopicName()
-        Message m = req.getMessage()
-        putter.putInTopic(topicId,m)
+        String content = req.getMessage()
+        Message m = new Message(UUID.randomUUID(), content)
+        if (topicId == null) {
+            throw new ResourceException(400, "topic id missing")
+        }
+        putter.putInTopic(topicId, m)
         return true;
     }
 }

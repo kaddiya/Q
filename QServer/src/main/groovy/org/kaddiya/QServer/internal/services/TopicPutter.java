@@ -7,5 +7,5 @@ import org.kaddiya.QClient.models.Message;
  */
 public interface TopicPutter {
 
-    public boolean putInTopic(String topicId,Message m);
+    public boolean putInTopic(String topicId, Message m);
 }

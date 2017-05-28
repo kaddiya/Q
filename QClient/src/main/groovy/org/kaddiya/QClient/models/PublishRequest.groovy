@@ -7,6 +7,6 @@ import groovy.transform.Immutable
  */
 @Immutable
 class PublishRequest {
-    Message message
+    String message
     String topicName
 }

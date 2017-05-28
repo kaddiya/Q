@@ -9,8 +9,8 @@ class RootRouter extends RestlingRouter {
 
     @Override
     void init() throws Exception {
-        attach("/ping",PingController)
-        attach("/producer",PublisherController)
-        attach("/consumer/{topicId}",ConsumerController)
+        attach("/ping", PingController)
+        attach("/producer", PublisherController)
+        attach("/consumer/{topicId}", ConsumerController)
     }
 }

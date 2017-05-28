@@ -14,11 +14,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 @Immutable
 @CompileStatic
-public class Topic{
+public class Topic {
 
     //every topic should have
     // the queue representation
-   public  ArrayBlockingQueue queue = new ArrayBlockingQueue<String>(5,true);
+    public ArrayBlockingQueue queue = new ArrayBlockingQueue<String>(5, true);
     // consumer configuration -> consumers details
     //message delivery log -> will have details for each message's delivery and ack
 

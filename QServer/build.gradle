@@ -1,4 +1,3 @@
-
 group 'org.kaddiya'
 version '1.0.0-SNAPSHOT'
 // Apply the groovy plugin to add support for Groovy
@@ -50,7 +49,6 @@ dependencies {
     compile 'org.kaddiya:QClient:1.0.0-SNAPSHOT'
     // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
-
 
 
 }
