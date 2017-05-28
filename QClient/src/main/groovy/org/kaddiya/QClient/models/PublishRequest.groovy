@@ -3,9 +3,10 @@ package org.kaddiya.QClient.models
 import groovy.transform.Immutable
 
 /**
- * Created by Webonise on 27/05/17.
+ * Created by Webonise on 28/05/17.
  */
 @Immutable
-class TopicConfig {
+class PublishRequest {
+    Message message
     String topicName
 }

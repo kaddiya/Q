@@ -5,5 +5,5 @@ package org.kaddiya.QServer.internal.models
  */
 public class Datastore {
 
-    static List<Topic>TOPICS;
+    static HashMap<String,Topic> datastore;
 }
