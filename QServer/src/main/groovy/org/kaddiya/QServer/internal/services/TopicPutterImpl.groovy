@@ -12,9 +12,9 @@ import org.restlet.resource.ResourceException
 public class TopicPutterImpl implements TopicPutter {
     @Override
     public boolean putInTopic(String topicId, Message m) {
-        Topic t = Datastore.getTopicById(topicId);
+
         try {
-            t.queue.add(m);
+           Datastore.addMessageToTopic(topicId,m)
         } catch (IllegalStateException e) {
             log.error("error occured while publishing the message", e)
             throw new ResourceException(507, "The queue is full.The message will be published when capacity is freed up")
