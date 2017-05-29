@@ -1,5 +1,6 @@
+package org.kaddiya.QClient.example
+
 import groovy.transform.Canonical
-import groovy.transform.Immutable
 
 /**
  * Created by Webonise on 28/05/17.

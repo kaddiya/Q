@@ -6,8 +6,6 @@ import org.kaddiya.QClient.models.Message;
 import org.kaddiya.QServer.internal.models.Datastore;
 import org.kaddiya.QServer.internal.models.Topic;
 
-import java.util.UUID;
-
 /**
  * Created by Webonise on 28/05/17.
  */
@@ -17,7 +15,7 @@ public class TopicPutterImpl implements TopicPutter {
     @Override
     public boolean putInTopic(String topicId, Message m) {
         Topic t = Datastore.getTopicById(topicId);
-        t.queue.add(UUID.randomUUID().toString());
+        t.queue.add(m);
         return true;
     }
 }

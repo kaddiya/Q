@@ -3,7 +3,6 @@ package org.kaddiya.QServer.internal.models;
 
 import groovy.transform.CompileStatic;
 import groovy.transform.Immutable;
-import org.kaddiya.QClient.models.Message;
 
 import java.util.concurrent.ArrayBlockingQueue;
 

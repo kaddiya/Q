@@ -1,11 +1,8 @@
-package org.kaddiya.QClient.models
+package org.kaddiya.QClient.models.producer.models
 
 import groovy.transform.Immutable
 
 
-/**
- * Created by Webonise on 27/05/17.
- */
 @Immutable
 class Message {
     UUID uuid

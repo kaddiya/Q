@@ -30,6 +30,8 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.0'
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'ch.qos.logback:logback-classic:1.0.9'
+    compile 'ch.qos.logback:logback-core:1.0.9'
 
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.4.1'
 

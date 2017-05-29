@@ -4,7 +4,6 @@ import com.google.inject.Inject
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.models.Message
 import org.kaddiya.QClient.models.PublishRequest
-import org.kaddiya.QServer.internal.models.Datastore
 import org.kaddiya.QServer.internal.services.TopicPutter
 import org.restlet.resource.Post
 import org.restlet.resource.ResourceException
@@ -21,8 +20,10 @@ class PublisherController extends ServerResource {
 
     @Post
     public Boolean publishMessage(PublishRequest req) {
+        log.info("got the request!")
         String topicId = req.getTopicName()
         String content = req.getMessage()
+        log.info(content.toString())
         Message m = new Message(UUID.randomUUID(), content)
         if (topicId == null) {
             throw new ResourceException(400, "topic id missing")
