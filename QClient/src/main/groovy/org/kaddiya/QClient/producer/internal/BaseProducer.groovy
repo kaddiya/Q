@@ -6,7 +6,6 @@ import okhttp3.*
 import org.kaddiya.QClient.common.BrokerConfig
 import org.kaddiya.QClient.common.BrokerException
 import org.kaddiya.QClient.producer.models.PublishRequest
-import org.kaddiya.QClient.producer.models.UnpublishableException
 
 @Slf4j
 public class BaseProducer<T> {
@@ -42,12 +41,8 @@ public class BaseProducer<T> {
                 .scheme(this.bCfg.protocol)
                 .host(this.bCfg.host)
                 .port(this.bCfg.port)
-                .addPathSegment("/producer").build().toString()
+                .addPathSegment("producer").build()
 
-    }
-
-    private String getDecodedUrl(HttpUrl encodedUrl) {
-        return java.net.URLDecoder.decode(encodedUrl.toString(), "UTF-8")
     }
 
 
@@ -59,9 +54,7 @@ public class BaseProducer<T> {
                 doWork(message)
                 return true
             } catch (IOException | BrokerException e) {
-                log.warn("Current iteration is :", iterationCount)
-                log.warn("Could not publish the message.Error is ", e)
-
+                log.error("Could not publish the message due to ", e)
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!
                     Thread.sleep(((int) Math.round(Math.pow(2, iterationCount)) * 1000));
@@ -70,7 +63,7 @@ public class BaseProducer<T> {
                 }
 
                 if (iterationCount == MAX_RETRY_LIMIT) {
-                    throw new UnpublishableException("You have exhausted the retries for trying to publish the message")
+                    throw new IllegalStateException("You have exhausted the retries for trying to publish this message")
                 }
 
             }
@@ -80,21 +73,25 @@ public class BaseProducer<T> {
     }
 
     private void doWork(T message) {
-        this.httpClient.newCall(constructRequest(message)).execute().withCloseable { Response res ->
+        Response res
+        try {
+            res = this.httpClient.newCall(constructRequest(message)).execute()
             switch (res.code()) {
                 case 507:
                     //thrown when the queue is full
-                    log.error("The broker is operating at the highest capacity")
-                    throw new BrokerException(res.code(), "The broker is operating at the highest capacity")
+                    throw new BrokerException("The broker is operating at the highest capacity")
                     break;
                 case 200:
                     log.info("Sucessfully published the message")
                     break;
-                 default:
-                     System.out.print(res.code())
-
-
+                default:
+                    System.out.println(res.code())
+            }
+        } finally {
+            if (res != null) {
+                res.close()
             }
         }
+
     }
 }

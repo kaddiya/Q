@@ -11,23 +11,27 @@ import org.kaddiya.QClient.producer.models.UnpublishableException
 public class Main {
 
     public static void main(String[] args) {
+
         String protocol = "HTTP";
         String brokerHost = System.getenv("BROKER_HOST");
         String brokerPort = System.getenv("BROKER_PORT");
         BrokerConfig bc = new BrokerConfig(protocol, brokerHost, Integer.valueOf(brokerPort));
-        SimpleProducer s = new SimpleProducer("2", bc);
+        SimpleProducer s = new SimpleProducer("1", bc);
 
 
-        SampleMessage sm = new SampleMessage();
-        sm.setName("s");
-        sm.setValid(true);
-        sm.setAge(12);
-        try {
-            s.publishToBroker(sm);
-        } catch (UnpublishableException e) {
-            log.error("Error occured while publishing the message", e)
+        int i = 0
+        while (true) {
+            try {
+                i++
+                SampleMessage sm = new SampleMessage();
+                sm.setName("s" + i);
+                sm.setValid(true);
+                sm.setAge(i);
+                s.publishToBroker(sm);
+            } catch (UnpublishableException e) {
+                log.error("Error occured while publishing the message", e)
+            }
+            Thread.sleep(5000)
         }
-
-
     }
 }

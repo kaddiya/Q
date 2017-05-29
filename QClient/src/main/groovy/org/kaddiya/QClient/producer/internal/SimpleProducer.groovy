@@ -16,11 +16,12 @@ public class SimpleProducer extends BaseProducer implements Producer {
     }
 
     @Override
-    public void publishToBroker(Object m) {
+    public void publishToBroker(Object m) throws UnpublishableException {
         try {
             super.publish(m);
-        } catch (Exception e) {
-            throw new UnpublishableException(e.getMessage(), e.getCause())
+        } catch (IllegalStateException e) {
+            log.error("error occured while publishing the message.Unless handled by the client,this message is lost for ever", e);
+            throw new UnpublishableException("This message could not be published even after retrying")
         }
     }
 }
