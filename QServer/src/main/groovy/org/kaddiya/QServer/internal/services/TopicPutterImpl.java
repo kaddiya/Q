@@ -2,7 +2,7 @@ package org.kaddiya.QServer.internal.services;
 
 import groovy.transform.CompileStatic;
 import groovy.util.logging.Slf4j;
-import org.kaddiya.QClient.models.Message;
+import org.kaddiya.QClient.common.Message;
 import org.kaddiya.QServer.internal.models.Datastore;
 import org.kaddiya.QServer.internal.models.Topic;
 

@@ -1,4 +1,4 @@
-package org.kaddiya.QClient.models.producer.models
+package org.kaddiya.QClient.common
 
 import groovy.transform.Immutable
 

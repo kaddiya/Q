@@ -1,4 +1,4 @@
-package org.kaddiya.QClient.models.producer.models
+package org.kaddiya.QClient.common
 /**
  * Created by Webonise on 30/05/17.
  */

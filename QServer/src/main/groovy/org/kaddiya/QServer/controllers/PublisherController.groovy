@@ -2,8 +2,8 @@ package org.kaddiya.QServer.controllers
 
 import com.google.inject.Inject
 import groovy.util.logging.Slf4j
-import org.kaddiya.QClient.models.Message
-import org.kaddiya.QClient.models.PublishRequest
+import org.kaddiya.QClient.common.Message
+import org.kaddiya.QClient.producer.models.PublishRequest
 import org.kaddiya.QServer.internal.services.TopicPutter
 import org.restlet.resource.Post
 import org.restlet.resource.ResourceException

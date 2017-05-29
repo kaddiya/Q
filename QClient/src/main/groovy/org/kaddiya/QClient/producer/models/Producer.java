@@ -1,4 +1,4 @@
-package org.kaddiya.QClient.models.producer.models;
+package org.kaddiya.QClient.producer.models;
 
 public interface Producer {
 

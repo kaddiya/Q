@@ -2,8 +2,9 @@ package org.kaddiya.QClient.example
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.kaddiya.QClient.models.producer.internal.SimpleProducer
-import org.kaddiya.QClient.models.producer.models.BrokerConfig
+import org.kaddiya.QClient.common.BrokerConfig
+import org.kaddiya.QClient.producer.internal.SimpleProducer
+import org.kaddiya.QClient.producer.models.UnpublishableException
 
 @CompileStatic
 @Slf4j
@@ -21,7 +22,11 @@ public class Main {
         sm.setName("s");
         sm.setValid(true);
         sm.setAge(12);
-        s.publishToBroker(sm);
+        try {
+            s.publishToBroker(sm);
+        } catch (UnpublishableException e) {
+            log.error("Error occured while publishing the message", e)
+        }
 
 
     }
