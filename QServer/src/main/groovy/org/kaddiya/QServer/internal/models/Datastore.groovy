@@ -3,9 +3,7 @@ package org.kaddiya.QServer.internal.models
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
 
-/**
- * Created by Webonise on 27/05/17.
- */
+
 @Slf4j
 public class Datastore {
     private static Datastore datastore = new Datastore();
@@ -29,7 +27,7 @@ public class Datastore {
         t.getQueue().add(m)
     }
 
-    public static synchronized Message getMessage(String topicId){
+    public static synchronized Message getMessage(String topicId) {
         return getTopicById(topicId).getQueue().take()
     }
 }
