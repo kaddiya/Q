@@ -12,7 +12,7 @@ class RootRouter extends RestlingRouter {
     void init() throws Exception {
         attach("/ping", PingController)
         attach("/producer", PublisherController)
-        attach("/consumer_registration",ConsumerRegistrationController)
+        attach("/consumer_registration", ConsumerRegistrationController)
         attach("/consumer/{topicId}", ConsumerController)
     }
 }

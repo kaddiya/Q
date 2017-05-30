@@ -14,27 +14,28 @@ public class BaseProducer<T> {
     protected final Gson gson = new Gson()
     private final String topicId
     protected final BrokerConfig bCfg
-    private final int MAX_RETRY_LIMIT = 3 //lets work with 3 retries
+    //private final int MAX_RETRY_LIMIT = 3 //lets work with 3 retries
 
-    public BaseProducer(String topicId, BrokerConfig cfg) {
+    /*public BaseProducer(String topicId, BrokerConfig cfg) {
         this.bCfg = cfg
         this.topicId = topicId
         this.httpClient = new OkHttpClient.Builder().build()
 
-    }
-
+    }*/
+/*
 
     private Request constructRequest(T content) {
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String payload = gson.toJson(content)
+
         PublishRequest request = new PublishRequest(payload, topicId)
         return new Request.Builder()
                 .url(getCanonicalURL())
                 .post(RequestBody.create(JSON, this.gson.toJson(request)))
                 .build();
     }
-
+*/
+    /*
     private String getCanonicalURL() {
 
         return new HttpUrl.Builder()
@@ -43,7 +44,7 @@ public class BaseProducer<T> {
                 .port(this.bCfg.port)
                 .addPathSegment("producer").build()
 
-    }
+    }*/
 
 
     protected boolean publish(T message) {
@@ -71,7 +72,7 @@ public class BaseProducer<T> {
         //if everything happens just fine we are home free
 
     }
-
+/*
     private void doWork(T message) {
         Response res
         try {
@@ -93,5 +94,5 @@ public class BaseProducer<T> {
             }
         }
 
-    }
+    }*/
 }
