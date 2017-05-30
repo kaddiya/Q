@@ -1,0 +1,7 @@
+
+allprojects {
+    apply plugin: 'groovy'
+    group = 'org.kaddiya.Q'
+    version = '1.0'
+}
+
