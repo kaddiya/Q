@@ -5,8 +5,8 @@ include 'api'
 include 'services:webservice'
 */
 
-//rootProject.name = 'Q'
+rootProject.name = 'Q'
 
-//include  'QClient','QServer'
+include  'QClient','QServer'
 
 
