@@ -1,4 +1,3 @@
-
 allprojects {
     apply plugin: 'groovy'
     group = 'org.kaddiya.Q'

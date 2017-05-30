@@ -7,6 +7,6 @@ include 'services:webservice'
 
 rootProject.name = 'Q'
 
-include 'QServer','QClient'
+include 'QServer', 'QClient'
 
 
