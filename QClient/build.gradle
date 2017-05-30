@@ -8,8 +8,6 @@
  */
 
 
-group 'org.kaddiya'
-version '1.0.0-SNAPSHOT'
 
 // Apply the java plugin to add support for Java
 apply plugin: 'idea'
