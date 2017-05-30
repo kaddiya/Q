@@ -17,18 +17,21 @@ public class BaseConsumer {
     protected final BrokerConfig bCfg;
     private final int MAX_RETRY_LIMIT = 3; //lets work with 3 retries
     private final String consumerId
-    private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer"
+    private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
 
-    protected BaseConsumer(String topicId, BrokerConfig cfg) {
+    public BaseConsumer(String topicId, BrokerConfig cfg) {
         this.bCfg = cfg;
         this.topicId = topicId;
         this.httpClient = new OkHttpClient.Builder().build();
         this.consumerId = UUID.randomUUID().toString();
         //set off by having to register a subscription request
         SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId)
-        Response res = this.httpClient.newCall(constructRequest(request, SUBSCRIPTION_CONFIRMATION_URL)).execute();
-        res.withCloseable { it ->
-            if ((it as Response).code() != 200) {
+        Request r = constructRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
+        Call c = this.httpClient.newCall(r)
+        Response res = c.execute();
+        res.withCloseable {
+           log.info(String.valueOf(res.code()))
+            if (res.code() != 200) {
                 throw new IllegalStateException("Failed to register the subscription request")
             }
         }
@@ -39,10 +42,10 @@ public class BaseConsumer {
     private Request constructRequest(Object content, String urlPath) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         String payload = gson.toJson(content)
-
+        log.info(payload)
         return new Request.Builder()
                 .url(getCanonicalURL(urlPath))
-                .post(RequestBody.create(JSON, this.gson.toJson(payload)))
+                .post(RequestBody.create(JSON, this.gson.toJson(content)))
                 .build();
 
     }

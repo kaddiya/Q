@@ -8,5 +8,4 @@ class BrokerConfig {
     String protocol
     String host
     Integer port
-
 }

@@ -44,8 +44,8 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.0.9'
     compile 'ch.qos.logback:logback-core:1.0.9'
 
-    //compile 'org.kaddiya:QClient:1.0.0-SNAPSHOT'
-    compile 'org.kaddiya.Q:QClient:2.0'
+
+    compile 'org.kaddiya.Q:QClient:1.0'
     // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 
