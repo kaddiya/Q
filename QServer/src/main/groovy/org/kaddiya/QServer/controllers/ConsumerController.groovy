@@ -19,7 +19,7 @@ class ConsumerController extends ServerResource {
     @Get
     public Message getMessage() {
         String topicId = request.getAttributes().get("topicId")
-        log.info("getting message from topic ID "+topicId)
+        log.info("getting message from topic ID " + topicId)
         return topicPutterImpl.readMessageFromTopic(topicId)
 
     }

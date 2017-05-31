@@ -11,7 +11,6 @@ import org.kaddiya.QClient.consumer.models.ConsumptionException
 import org.kaddiya.QClient.consumer.models.RegistrationException
 import org.kaddiya.QClient.consumer.models.SubscriptionRegistrationRequest
 
-import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -24,18 +23,22 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
 
     private List<String> depdenciesOfConsumers
-    protected  ExecutorService messagePollerExecutor = Executors.newFixedThreadPool(1);
-    protected MessagePoller poller
-    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers,Integer retries) {
-        super(cfg, topicId,retries)
+    protected ExecutorService messagePollerExecutor = Executors.newFixedThreadPool(1);
+
+    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries) {
+        super(cfg, topicId, retries)
         this.consumerId = UUID.randomUUID().toString();
         this.depdenciesOfConsumers = depdenciesOfConsumers
-        poller = new MessagePoller(constructGetRequest("consumer/"+topicId))
+
         //set off by having to register a subscription request
         SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId, depdenciesOfConsumers)
         Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
-        interactWithBrokerOverNetworkWithRetries(httpReq);
 
+        try {
+            interactWithBrokerOverNetworkWithRetries(httpReq);
+        } catch (IOException e) {
+            log.warn("There was an issue with the connection.System will silently wait for the Broker to respond")
+        }
 
 
     }
@@ -64,25 +67,22 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
     }
 
 
+    protected void pollAndWaitForMessage() {
+        while (true) {
+            Request request = constructGetRequest("consumer/" + topicId)
+            try {
+                Object o = interactWithBrokerOverNetworkWithRetries(request);
+                log.info(o as String)
+                Message m = gson.fromJson(o as String, Message);
+                log.info(m.content)
+            } catch (IllegalStateException e) {
+                log.error("Could not get a message even after some retrying")
+            } catch (IOException ioe) {
+                log.warn("There was an connection issue encountered.The system is not going down but silently waiting for the broker to respond ")
+            }
 
-    class MessagePoller implements Callable<Message>{
-
-       private final Request req
-
-        public  MessagePoller(Request r){
-            this.req = r
-        }
-
-        @Override
-        Message call() throws Exception {
-            Object o = interactWithBrokerOverNetworkWithRetries(req);
-            Message m = gson.fromJson(o as String, Message);
-            return m
         }
     }
-
-
-
 
 
 }

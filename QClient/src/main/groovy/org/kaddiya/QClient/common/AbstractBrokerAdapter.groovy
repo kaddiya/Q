@@ -14,7 +14,7 @@ public abstract class AbstractBrokerAdapter {
     protected final Gson gson = new Gson();
     private final Integer MAX_RETRY_LIMIT
 
-    public AbstractBrokerAdapter(BrokerConfig bc, String topicId,Integer retries) {
+    public AbstractBrokerAdapter(BrokerConfig bc, String topicId, Integer retries) {
         this.brokerConfig = bc;
         this.topicId = topicId;
         this.MAX_RETRY_LIMIT = retries
@@ -62,15 +62,16 @@ public abstract class AbstractBrokerAdapter {
         return java.net.URLDecoder.decode(encodedUrl.toString(), "UTF-8")
     }
 
-    protected Object interactWithBrokerOverNetworkWithRetries(Request request) {
-        int iterationCount = 0;
+    protected Object interactWithBrokerOverNetworkWithRetries(Request request) throws IOException {
+        int iterationCount = 1;
         while (iterationCount <= MAX_RETRY_LIMIT) {
-            iterationCount++
+
             try {
                 Response r = makeHttpCall(request)
                 return handleResponseFromBroker(r)
-
-            } catch (IOException | RetryableException e) {
+            }
+            catch (RetryableException e) {
+                iterationCount++
                 log.error("", e)
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!

@@ -3,7 +3,6 @@ package org.kaddiya.QClient.consumer.internal.example
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.BrokerConfig
-import org.kaddiya.QClient.common.Message
 import org.kaddiya.QClient.consumer.internal.SimpleConsumer
 
 @CompileStatic
@@ -12,9 +11,8 @@ class Main {
 
     public static void main(String[] arggs) {
 
-        SimpleConsumer bc = new SimpleConsumer<SomePayload>("1", new BrokerConfig("http", "localhost", 8080),Arrays.asList(""))
-        Message p = bc.waitForMessage();
-        System.out.print(p.content)
+        SimpleConsumer bc = new SimpleConsumer<SomePayload>("1", new BrokerConfig("http", "localhost", 8080), Arrays.asList(""))
+        bc.consumeMesage();
     }
 
 
