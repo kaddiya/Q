@@ -1,4 +1,4 @@
 allprojects {
     group = 'org.kaddiya.Q'
-    version = '1.0.6'
+    version = '1.0.0'
 }

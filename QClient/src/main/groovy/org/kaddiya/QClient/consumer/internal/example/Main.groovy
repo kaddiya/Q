@@ -17,15 +17,11 @@ class Main {
          //due to the type erasure we to tell our abstract class on how to unmarshall the content to our type and then pass in a
         //a closure that will do the transformation and perform the sideeffect of when we receive a message
         //In this example we will just log out the value of the `SomePayload`
+        //We can return SomePayload and then curry it to another function for jazzy transformation
         Closure<SomePayload> marshallingAndCallBackClosure = { Message m ->
             try {
-                SomePayload p = new SomePayload("hallo!")
-                def a =new JsonSlurper().parse(m.content.bytes)
-                //log.info(new Gson().toJson(p))
-
-                SomePayload rsult = new Gson().fromJson(m.content, SomePayload.class)
+                //need to serialise m.content into this class
                 log.info(m.uuid.toString() + "--" + m.content)
-
             }catch (Exception e){
                 log.error("could not marshall the json"+e.getMessage())
                 return  null
