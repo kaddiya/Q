@@ -4,7 +4,7 @@ import org.kaddiya.QClient.common.RetryableException
 
 
 class ConsumptionException extends RetryableException {
-    String message;
+    private final String message;
 
     public ConsumptionException(String message) {
         super(message)

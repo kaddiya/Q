@@ -9,8 +9,8 @@ import org.kaddiya.QClient.common.Message
 @Slf4j
 class SimpleConsumer<T> extends BaseConsumer {
 
-    public SimpleConsumer(String topicId, BrokerConfig cfg, List<String> consumerDependencies) {
-        super(topicId, cfg, consumerDependencies, 1)
+    public SimpleConsumer(String topicId, BrokerConfig cfg, List<String> consumerDependencies, Closure<T> callback) {
+        super(topicId, cfg, consumerDependencies, 1, callback)
 
     }
 

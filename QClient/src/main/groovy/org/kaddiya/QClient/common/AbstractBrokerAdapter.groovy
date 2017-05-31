@@ -14,6 +14,9 @@ public abstract class AbstractBrokerAdapter {
     protected final Gson gson = new Gson();
     private final Integer MAX_RETRY_LIMIT
 
+    protected
+    final String CONNECTION_ERROR_MESSAGE = "There was an connection issue encountered.The system is not going down but silently waiting for the broker to respond "
+
     public AbstractBrokerAdapter(BrokerConfig bc, String topicId, Integer retries) {
         this.brokerConfig = bc;
         this.topicId = topicId;
@@ -72,7 +75,7 @@ public abstract class AbstractBrokerAdapter {
             }
             catch (RetryableException e) {
                 iterationCount++
-                log.error("", e)
+                log.warn("Could not get response from broker due to " + e.getMessage())
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!
                     Thread.sleep(((int) Math.round(Math.pow(2, iterationCount)) * 1000));

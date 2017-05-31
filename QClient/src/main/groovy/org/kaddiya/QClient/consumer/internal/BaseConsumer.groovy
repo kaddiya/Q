@@ -11,9 +11,6 @@ import org.kaddiya.QClient.consumer.models.ConsumptionException
 import org.kaddiya.QClient.consumer.models.RegistrationException
 import org.kaddiya.QClient.consumer.models.SubscriptionRegistrationRequest
 
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-
 @CompileStatic
 @Slf4j
 public class BaseConsumer<T> extends AbstractBrokerAdapter {
@@ -21,15 +18,14 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
     private final String consumerId
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
-
+    protected final Closure<T> parsingCallback
     private List<String> depdenciesOfConsumers
-    protected ExecutorService messagePollerExecutor = Executors.newFixedThreadPool(1);
 
-    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries) {
+    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries, Closure<T> callback) {
         super(cfg, topicId, retries)
         this.consumerId = UUID.randomUUID().toString();
         this.depdenciesOfConsumers = depdenciesOfConsumers
-
+        this.parsingCallback = callback
         //set off by having to register a subscription request
         SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId, depdenciesOfConsumers)
         Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
@@ -37,7 +33,7 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
         try {
             interactWithBrokerOverNetworkWithRetries(httpReq);
         } catch (IOException e) {
-            log.warn("There was an issue with the connection.System will silently wait for the Broker to respond")
+            log.warn(CONNECTION_ERROR_MESSAGE, e.getMessage())
         }
 
 
@@ -55,6 +51,7 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                     throw new IllegalStateException("error encountered")
                 case 404:
                     throw new ConsumptionException("No message yet available")
+
                 case 200:
                     // since we know that in the consumer we are going to get in a string format return the response body as string when there is a 200
                     return res.body().string()
@@ -72,15 +69,16 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
             Request request = constructGetRequest("consumer/" + topicId)
             try {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
-                Message m = gson.fromJson(o as String, Message);
-                //need to apply the call abckl here
-                if (m != null) {
-                    log.info(m.content)
+                if (o != null) {
+                    log.info(o as String)
+                    Message m = gson.fromJson(o as String, Message);
+                    log.info("Recieved the mssage" + m.content)
                 }
+
             } catch (IllegalStateException e) {
                 log.error("Could not get a message even after some retrying")
             } catch (IOException ioe) {
-                log.warn("There was an connection issue encountered.The system is not going down but silently waiting for the broker to respond ")
+                log.warn(CONNECTION_ERROR_MESSAGE, ioe.getMessage())
             }
             Thread.sleep(1000)
         }
