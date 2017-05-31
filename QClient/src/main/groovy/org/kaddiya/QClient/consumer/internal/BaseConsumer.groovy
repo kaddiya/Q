@@ -20,30 +20,24 @@ import java.util.concurrent.Executors
 public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
 
-    private final int MAX_RETRY_LIMIT = 3; //lets work with 3 retries
     private final String consumerId
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
-    ExecutorService executor = Executors.newFixedThreadPool(1);
-    private List<String> depdenciesOfConsumers
 
-    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers) {
-        super(cfg, topicId)
+    private List<String> depdenciesOfConsumers
+    protected  ExecutorService messagePollerExecutor = Executors.newFixedThreadPool(1);
+    protected MessagePoller poller
+    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers,Integer retries) {
+        super(cfg, topicId,retries)
         this.consumerId = UUID.randomUUID().toString();
         this.depdenciesOfConsumers = depdenciesOfConsumers
+        poller = new MessagePoller(constructGetRequest("consumer/"+topicId))
         //set off by having to register a subscription request
         SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId, depdenciesOfConsumers)
         Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
         interactWithBrokerOverNetworkWithRetries(httpReq);
 
 
-        while (true) {
-            Request consumptionRequest = constructGetRequest("consumer/" + topicId);
-            Object o = interactWithBrokerOverNetworkWithRetries(consumptionRequest);
-            Message m = o as Message
-            if (m != null) {
-                log.info(m.content)
-            }
-        }
+
     }
 
     @Override
@@ -59,6 +53,8 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                 case 404:
                     throw new ConsumptionException("No message yet available")
                 case 200:
+                    // since we know that in the consumer we are going to get in a string format return the response body as string when there is a 200
+                    return res.body().string()
                     break;
                 default:
                     log.info(String.valueOf(res.code()))
@@ -67,17 +63,26 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
         }
     }
 
-    class MessagePoller implements Callable<Message> {
 
-        String topicId
 
-        public MessagePoller(String topicId) {
-            this.topicId = topicId
+    class MessagePoller implements Callable<Message>{
+
+       private final Request req
+
+        public  MessagePoller(Request r){
+            this.req = r
         }
 
         @Override
         Message call() throws Exception {
-            return null
+            Object o = interactWithBrokerOverNetworkWithRetries(req);
+            Message m = gson.fromJson(o as String, Message);
+            return m
         }
     }
+
+
+
+
+
 }

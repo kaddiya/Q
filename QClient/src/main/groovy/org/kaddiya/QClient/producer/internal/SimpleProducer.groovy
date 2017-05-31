@@ -19,7 +19,7 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
     private String PRODUCER_URL = "producer"
 
     public SimpleProducer(String topicId, BrokerConfig bCfg) {
-        super(bCfg, topicId);
+        super(bCfg, topicId,3);
     }
 
     @Override

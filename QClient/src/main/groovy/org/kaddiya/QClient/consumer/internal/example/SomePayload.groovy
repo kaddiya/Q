@@ -4,7 +4,6 @@ import groovy.transform.Immutable
 
 
 @Immutable
-class SomePayload {
-    String somePayload
-
+class SomePayload implements Serializable {
+    String value
 }

@@ -12,11 +12,12 @@ public abstract class AbstractBrokerAdapter {
     protected final String topicId;
     protected final OkHttpClient httpClient;
     protected final Gson gson = new Gson();
-    private final Integer MAX_RETRY_LIMIT = 3
+    private final Integer MAX_RETRY_LIMIT
 
-    public AbstractBrokerAdapter(BrokerConfig bc, String topicId) {
+    public AbstractBrokerAdapter(BrokerConfig bc, String topicId,Integer retries) {
         this.brokerConfig = bc;
         this.topicId = topicId;
+        this.MAX_RETRY_LIMIT = retries
         this.httpClient = new OkHttpClient.Builder().build();
     }
 
