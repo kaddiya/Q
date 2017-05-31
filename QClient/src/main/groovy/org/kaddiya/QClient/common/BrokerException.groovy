@@ -3,7 +3,7 @@ package org.kaddiya.QClient.common
  * Created by Webonise on 30/05/17.
  */
 
-class BrokerException extends Exception {
+class BrokerException extends RetryableException {
 
     private final String message
 
