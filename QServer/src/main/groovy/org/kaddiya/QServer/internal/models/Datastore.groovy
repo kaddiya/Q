@@ -7,7 +7,7 @@ import org.kaddiya.QClient.common.Message
 @Slf4j
 public class Datastore {
     private static Datastore datastore = new Datastore();
-    private static volatile Map<String, Topic> topics;
+    private static Map<String, Topic> topics;
 
     private Datastore() {
         topics = new HashMap<String, Topic>()

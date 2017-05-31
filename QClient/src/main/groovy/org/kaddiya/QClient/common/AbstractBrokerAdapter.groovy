@@ -42,16 +42,16 @@ public abstract class AbstractBrokerAdapter {
 
     }
 
-    protected Response makeHttpCall(Request request) {
+    protected abstract void handleResponseFromBroker(Response r)
+
+    private void makeHttpCall(Request request) {
         Call c = this.httpClient.newCall(request);
         try {
             Response res = c.execute()
-            return res
+            handleResponseFromBroker(res)
         } catch (Exception e) {
-            log.error("Error occured while executing the API call",e)
-            throw new IllegalStateException("Could not execute the API call")
+            throw new IllegalStateException("Could not execute the API call",e.getCause())
         }
-
 
     }
 
@@ -65,14 +65,14 @@ public abstract class AbstractBrokerAdapter {
     }
 
 
-    protected Response doNetWorkStuffWithRetries(Request request) {
+    protected void doNetWorkStuffWithRetries(Request request) {
         int iterationCount = 0;
         while (iterationCount <= MAX_RETRY_LIMIT) {
             iterationCount++
             try {
-                return makeHttpCall(request)
+                makeHttpCall(request)
 
-            } catch (IOException | BrokerException e) {
+            } catch (IOException | BrokerException |IllegalStateException e) {
                 log.error("Could not publish the message due to ", e)
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!

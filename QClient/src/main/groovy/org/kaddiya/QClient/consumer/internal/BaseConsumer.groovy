@@ -30,7 +30,7 @@ public class BaseConsumer extends AbstractBrokerAdapter {
         this.consumerId = UUID.randomUUID().toString();
 
         //set off by having to register a subscription request
-        SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId)
+        /*SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId)
         Request req = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
         Response res = doNetWorkStuffWithRetries(req)
         res.withCloseable {
@@ -38,11 +38,12 @@ public class BaseConsumer extends AbstractBrokerAdapter {
             if (res.code() != 200) {
                 throw new RegistrationException("Could not register the consumer with id");
             }
-        }
+        }*/
 
     }
 
+    @Override
+    protected void handleResponseFromBroker(Response r) {
 
-
-
+    }
 }

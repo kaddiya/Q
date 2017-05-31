@@ -15,7 +15,7 @@ public class TopicPutterImpl implements TopicPutter {
         try {
             Datastore.addMessageToTopic(topicId, m)
         } catch (IllegalStateException e) {
-            log.error("error occured while publishing the message", e)
+       //     log.error("error occured while publishing the message", e)
             throw new ResourceException(507, "The queue is full.The message will be published when capacity is freed up")
         }
 
