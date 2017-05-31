@@ -18,7 +18,7 @@ class SimpleConsumer<T> extends BaseConsumer implements Consumer<T> {
 
     @Override
     Message consumeMessage() {
-
+       // this.poller.call();
     }
 
     @Override

@@ -6,9 +6,11 @@ import okhttp3.Request
 import okhttp3.Response
 import org.kaddiya.QClient.common.AbstractBrokerAdapter
 import org.kaddiya.QClient.common.BrokerConfig
+import org.kaddiya.QClient.common.Message
 import org.kaddiya.QClient.consumer.models.RegistrationException
 import org.kaddiya.QClient.consumer.models.SubscriptionRegistrationRequest
 
+import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -21,7 +23,7 @@ public class BaseConsumer extends AbstractBrokerAdapter {
     private final String consumerId
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
     ExecutorService executor = Executors.newFixedThreadPool(1);
-
+   // protected final MessagePoller poller;
     public BaseConsumer(String topicId, BrokerConfig cfg) {
         super(cfg, topicId)
         this.consumerId = UUID.randomUUID().toString();
@@ -31,10 +33,14 @@ public class BaseConsumer extends AbstractBrokerAdapter {
         Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
         interactWithBrokerOverNetworkWithRetries(httpReq);
 
+      //  poller = new MessagePoller<Message>(topicId);
+       // executor.submit(poller)
+
+
     }
 
     @Override
-    protected boolean handleResponseFromBroker(Response res) {
+    protected Object handleResponseFromBroker(Response res) {
         res.withCloseable {
 
             switch (res.code()) {
@@ -47,4 +53,18 @@ public class BaseConsumer extends AbstractBrokerAdapter {
 
         }
     }
+
+/*    class MessagePoller implements Callable<Message>{
+
+        String topicId
+        public MessagePoller(String topicId){
+            this.topicId = topicId
+        }
+        @Override
+        Message call() throws Exception {
+            Request httpReq = constructGetRequest("/consumer/"+topicId);
+            interactWithBrokerOverNetworkWithRetries(httpReq);
+
+        }
+    }*/
 }

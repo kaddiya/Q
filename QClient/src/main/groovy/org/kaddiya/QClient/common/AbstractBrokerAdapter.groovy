@@ -40,13 +40,12 @@ public abstract class AbstractBrokerAdapter {
 
     }
 
-    protected abstract boolean handleResponseFromBroker(Response r)
+    protected abstract Object handleResponseFromBroker(Response r)
 
-    private Boolean makeHttpCall(Request request) {
+    private Response makeHttpCall(Request request) {
         Call c = this.httpClient.newCall(request);
         Response res = c.execute()
-        return this.handleResponseFromBroker(res)
-
+        return res
     }
 
     protected Request constructGetRequest(String urlPath) {
@@ -59,14 +58,15 @@ public abstract class AbstractBrokerAdapter {
     }
 
 
-    protected Boolean interactWithBrokerOverNetworkWithRetries(Request request) {
+    protected Object interactWithBrokerOverNetworkWithRetries(Request request) {
         int iterationCount = 0;
         while (iterationCount <= MAX_RETRY_LIMIT) {
             iterationCount++
             try {
-                return makeHttpCall(request)
+                Response r = makeHttpCall(request)
+                return handleResponseFromBroker(r)
 
-            } catch (IOException | BrokerException | IllegalStateException e) {
+            } catch (IOException | BrokerException e) {
                 log.error("Could not publish the message due to ", e)
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!

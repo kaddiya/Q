@@ -37,7 +37,7 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
     }
 
     @Override
-    protected boolean handleResponseFromBroker(Response res) {
+    protected Object handleResponseFromBroker(Response res) {
         res.withCloseable {
             log.info("HTTP code received is {}", String.valueOf(res.code()))
             switch (res.code()) {
