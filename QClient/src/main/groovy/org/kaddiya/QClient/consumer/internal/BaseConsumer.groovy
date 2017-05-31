@@ -72,15 +72,17 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
             Request request = constructGetRequest("consumer/" + topicId)
             try {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
-                log.info(o as String)
                 Message m = gson.fromJson(o as String, Message);
-                log.info(m.content)
+                //need to apply the call abckl here
+                if (m != null) {
+                    log.info(m.content)
+                }
             } catch (IllegalStateException e) {
                 log.error("Could not get a message even after some retrying")
             } catch (IOException ioe) {
                 log.warn("There was an connection issue encountered.The system is not going down but silently waiting for the broker to respond ")
             }
-
+            Thread.sleep(1000)
         }
     }
 

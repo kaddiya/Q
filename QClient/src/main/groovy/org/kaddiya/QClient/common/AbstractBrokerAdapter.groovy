@@ -86,7 +86,6 @@ public abstract class AbstractBrokerAdapter {
 
             }
         }
-        return true
 
     }
 }
