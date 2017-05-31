@@ -39,12 +39,13 @@ public class Datastore {
         return rsult;
     }
 
-    public synchronized static Boolean registerSubscription(String topicId, String consumerId) {
+    public synchronized
+    static Boolean registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) {
         Topic t = getTopicById(topicId)
-        if (t.getSubscriptions().contains(consumerId)) {
+        if (t.getSubscriptions().containsKey(consumerId)) {
             throw new RegistrationException("Consumer is already registered")
         }
-        return t.getSubscriptions().add(consumerId)
+        return t.getSubscriptions().put(consumerId, consumerDependencies)
 
     }
 }

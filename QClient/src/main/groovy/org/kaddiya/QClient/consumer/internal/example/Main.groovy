@@ -11,7 +11,7 @@ class Main {
 
     public static void main(String[] arggs) {
 
-        SimpleConsumer bc = new SimpleConsumer<SomePayload>("1", new BrokerConfig("http", "localhost", 8080))
+        SimpleConsumer bc = new SimpleConsumer<SomePayload>("1", new BrokerConfig("http", "localhost", 8080),Arrays.asList(""))
     }
 
 

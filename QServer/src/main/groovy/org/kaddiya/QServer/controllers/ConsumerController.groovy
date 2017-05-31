@@ -1,9 +1,10 @@
 package org.kaddiya.QServer.controllers
 
+import com.google.inject.Inject
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
-import org.kaddiya.QServer.internal.models.Datastore
+import org.kaddiya.QServer.internal.services.TopicPutterImpl
 import org.restlet.resource.Get
 import org.restlet.resource.ServerResource
 
@@ -12,11 +13,15 @@ import org.restlet.resource.ServerResource
 class ConsumerController extends ServerResource {
 
 
+    @Inject
+    TopicPutterImpl topicPutterImpl;
+
     @Get
     public Message getMessage() {
         String topicId = request.getAttributes().get("topicId")
-        Message message = Datastore.getMessage(topicId);
-        return message
+        log.info("getting message from topic ID "+topicId)
+        return topicPutterImpl.readMessageFromTopic(topicId)
+        //return message
     }
 
 

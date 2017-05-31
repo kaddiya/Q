@@ -6,4 +6,5 @@ import groovy.transform.Immutable
 class SubscriptionRegistrationRequest {
     String topicId
     String consumerId
+    List<String> depdenciesOfConsumers
 }

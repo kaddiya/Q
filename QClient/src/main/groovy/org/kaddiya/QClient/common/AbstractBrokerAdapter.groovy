@@ -69,8 +69,8 @@ public abstract class AbstractBrokerAdapter {
                 Response r = makeHttpCall(request)
                 return handleResponseFromBroker(r)
 
-            } catch (IOException | BrokerException e) {
-                log.error("Could not publish the message due to ", e)
+            } catch (IOException | RetryableException e) {
+                log.error("", e)
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!
                     Thread.sleep(((int) Math.round(Math.pow(2, iterationCount)) * 1000));

@@ -23,7 +23,18 @@ public class TopicPutterImpl implements TopicPutter {
     }
 
     @Override
-    void registerSubscription(String topicId, String consumerId) throws RegistrationException {
-        Datastore.registerSubscription(topicId, consumerId)
+    void registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) throws RegistrationException {
+        Datastore.registerSubscription(topicId, consumerId, consumerDependencies)
+    }
+
+    @Override
+    Message readMessageFromTopic(String topicId) {
+        try {
+         return   Datastore.getMessage(topicId);
+        } catch (NoSuchElementException e) {
+            throw new ResourceException(404, "No current Message is available for topic" + topicId)
+        }
+
+
     }
 }

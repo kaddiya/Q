@@ -20,7 +20,7 @@ class ConsumerRegistrationController extends ServerResource {
     public Status registerSubscription(SubscriptionRegistrationRequest request) {
         log.info("got the request to register to topic {}  by {}", request.topicId, request.consumerId)
         try {
-            topicPutterImpl.registerSubscription(request.topicId, request.consumerId)
+            topicPutterImpl.registerSubscription(request.topicId, request.consumerId, request.depdenciesOfConsumers)
         } catch (RegistrationException e) {
             log.error("Recieved a duplicate request for registration", e)
             throw new ResourceException(409, "Duplicate registration request received")
