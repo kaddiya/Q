@@ -1,11 +1,9 @@
-package org.kaddiya.QClient.common;
+package org.kaddiya.QClient.common
 
 import com.google.gson.Gson
 import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j;
-import okhttp3.*;
-
-import java.io.IOException;
+import groovy.util.logging.Slf4j
+import okhttp3.*
 
 @CompileStatic
 @Slf4j
@@ -47,7 +45,7 @@ public abstract class AbstractBrokerAdapter {
     private Boolean makeHttpCall(Request request) {
         Call c = this.httpClient.newCall(request);
         Response res = c.execute()
-        return  this.handleResponseFromBroker(res)
+        return this.handleResponseFromBroker(res)
 
     }
 
@@ -66,9 +64,9 @@ public abstract class AbstractBrokerAdapter {
         while (iterationCount <= MAX_RETRY_LIMIT) {
             iterationCount++
             try {
-               return makeHttpCall(request)
+                return makeHttpCall(request)
 
-            } catch (IOException | BrokerException |IllegalStateException e) {
+            } catch (IOException | BrokerException | IllegalStateException e) {
                 log.error("Could not publish the message due to ", e)
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!

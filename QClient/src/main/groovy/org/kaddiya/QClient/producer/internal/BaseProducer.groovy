@@ -2,10 +2,9 @@ package org.kaddiya.QClient.producer.internal
 
 import com.google.gson.Gson
 import groovy.util.logging.Slf4j
-import okhttp3.*
+import okhttp3.OkHttpClient
 import org.kaddiya.QClient.common.BrokerConfig
 import org.kaddiya.QClient.common.BrokerException
-import org.kaddiya.QClient.producer.models.PublishRequest
 
 @Slf4j
 public class BaseProducer<T> {

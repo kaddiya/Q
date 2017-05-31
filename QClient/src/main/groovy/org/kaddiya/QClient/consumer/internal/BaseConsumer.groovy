@@ -1,19 +1,16 @@
 package org.kaddiya.QClient.consumer.internal
 
-import com.google.gson.Gson
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import okhttp3.*
+import okhttp3.Request
+import okhttp3.Response
 import org.kaddiya.QClient.common.AbstractBrokerAdapter
 import org.kaddiya.QClient.common.BrokerConfig
-import org.kaddiya.QClient.common.Message
 import org.kaddiya.QClient.consumer.models.RegistrationException
 import org.kaddiya.QClient.consumer.models.SubscriptionRegistrationRequest
 
-import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 
 @CompileStatic
 @Slf4j
@@ -30,20 +27,24 @@ public class BaseConsumer extends AbstractBrokerAdapter {
         this.consumerId = UUID.randomUUID().toString();
 
         //set off by having to register a subscription request
-        /*SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId)
-        Request req = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
-        Response res = doNetWorkStuffWithRetries(req)
-        res.withCloseable {
-            log.info(String.valueOf(res.code()))
-            if (res.code() != 200) {
-                throw new RegistrationException("Could not register the consumer with id");
-            }
-        }*/
+        SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId)
+        Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
+        interactWithBrokerOverNetworkWithRetries(httpReq);
 
     }
 
     @Override
-    protected boolean handleResponseFromBroker(Response r) {
+    protected boolean handleResponseFromBroker(Response res) {
+        res.withCloseable {
 
+            switch (res.code()) {
+                case 409:
+                    throw new RegistrationException("Could not register the consumer with id" + this.consumerId);
+                    break
+                default:
+                    log.info(String.valueOf(res.code()))
+            }
+
+        }
     }
 }

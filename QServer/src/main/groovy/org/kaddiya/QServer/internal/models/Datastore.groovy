@@ -3,6 +3,7 @@ package org.kaddiya.QServer.internal.models
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
+import org.kaddiya.QClient.consumer.models.RegistrationException
 
 
 @Slf4j
@@ -24,7 +25,7 @@ public class Datastore {
 
     }
 
-    public Datastore getInstance(){
+    public Datastore getInstance() {
         return this.datastore
     }
 
@@ -36,5 +37,14 @@ public class Datastore {
     public synchronized static Message getMessage(String topicId) {
         Message rsult = getTopicById(topicId).getQueue().remove()
         return rsult;
+    }
+
+    public synchronized static Boolean registerSubscription(String topicId, String consumerId) {
+        Topic t = getTopicById(topicId)
+        if (t.getSubscriptions().contains(consumerId)) {
+            throw new RegistrationException("Consumer is already registered")
+        }
+        return t.getSubscriptions().add(consumerId)
+
     }
 }

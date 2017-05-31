@@ -16,18 +16,18 @@ import org.kaddiya.QClient.producer.models.UnpublishableException
 @CompileStatic
 public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
 
-   private String PRODUCER_URL= "producer"
+    private String PRODUCER_URL = "producer"
 
     public SimpleProducer(String topicId, BrokerConfig bCfg) {
-        super(bCfg,topicId);
+        super(bCfg, topicId);
     }
 
     @Override
     public void publishToBroker(Object m) throws UnpublishableException {
         try {
             String payload = new Gson().toJson(m)
-            PublishRequest request = new PublishRequest(payload,topicId)
-            Request httpRequest = constructPostRequest(request,PRODUCER_URL)
+            PublishRequest request = new PublishRequest(payload, topicId)
+            Request httpRequest = constructPostRequest(request, PRODUCER_URL)
             interactWithBrokerOverNetworkWithRetries(httpRequest)
 
         } catch (IllegalStateException e) {
@@ -39,7 +39,7 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
     @Override
     protected boolean handleResponseFromBroker(Response res) {
         res.withCloseable {
-            log.info("HTTP code received is {}",String.valueOf(res.code()))
+            log.info("HTTP code received is {}", String.valueOf(res.code()))
             switch (res.code()) {
                 case 507:
                     //thrown when the queue is full
@@ -49,10 +49,10 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
                     log.info("Sucessfully published the message")
                     break;
                 default:
-                    log.error("Invalid error code encountered",String.valueOf(res.code()))
+                    log.error("Invalid error code encountered", String.valueOf(res.code()))
             }
 
         }
-        return  true
+        return true
     }
 }

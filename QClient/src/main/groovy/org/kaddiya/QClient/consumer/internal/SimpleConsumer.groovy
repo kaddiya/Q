@@ -2,13 +2,9 @@ package org.kaddiya.QClient.consumer.internal
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.kaddiya.QClient.common.AbstractBrokerAdapter
 import org.kaddiya.QClient.common.BrokerConfig
 import org.kaddiya.QClient.common.Message
 import org.kaddiya.QClient.consumer.models.Consumer
-
-import java.util.function.Function
-
 
 @CompileStatic
 @Slf4j
