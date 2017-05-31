@@ -1,9 +1,8 @@
 package org.kaddiya.QClient.consumer.internal.example
 
-import groovy.transform.Immutable
+import groovy.transform.Canonical
 
-
-@Immutable
+@Canonical
 class SomePayload implements Serializable {
     String value
 }

@@ -18,14 +18,15 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
     private final String consumerId
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
-    protected final Closure<T> parsingCallback
+    protected final Closure<T> marshallingCallback
     private List<String> depdenciesOfConsumers
 
     public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries, Closure<T> callback) {
         super(cfg, topicId, retries)
         this.consumerId = UUID.randomUUID().toString();
         this.depdenciesOfConsumers = depdenciesOfConsumers
-        this.parsingCallback = callback
+        this.marshallingCallback = callback
+
         //set off by having to register a subscription request
         SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId, depdenciesOfConsumers)
         Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
@@ -51,7 +52,6 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                     throw new IllegalStateException("error encountered")
                 case 404:
                     throw new ConsumptionException("No message yet available")
-
                 case 200:
                     // since we know that in the consumer we are going to get in a string format return the response body as string when there is a 200
                     return res.body().string()
@@ -64,17 +64,15 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
     }
 
 
-    protected void pollAndWaitForMessage() {
+    protected void longPollForMessageAndActOnMessage() {
         while (true) {
             Request request = constructGetRequest("consumer/" + topicId)
             try {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
                 if (o != null) {
-                    log.info(o as String)
                     Message m = gson.fromJson(o as String, Message);
-                    log.info("Recieved the mssage" + m.content)
+                    marshallingCallback.call(m)
                 }
-
             } catch (IllegalStateException e) {
                 log.error("Could not get a message even after some retrying")
             } catch (IOException ioe) {
