@@ -23,11 +23,11 @@ public abstract class AbstractBrokerAdapter {
 
     protected String getCanonicalURL(String urlPath) {
 
-        return new HttpUrl.Builder()
+        return getDecodedUrl(new HttpUrl.Builder()
                 .scheme(this.brokerConfig.getProtocol())
                 .host(this.brokerConfig.getHost())
                 .port(this.brokerConfig.getPort())
-                .addPathSegment(urlPath).build().toString();
+                .addPathSegment(urlPath).build())
 
     }
 
@@ -57,6 +57,9 @@ public abstract class AbstractBrokerAdapter {
 
     }
 
+    private String getDecodedUrl(HttpUrl encodedUrl) {
+        return java.net.URLDecoder.decode(encodedUrl.toString(), "UTF-8")
+    }
 
     protected Object interactWithBrokerOverNetworkWithRetries(Request request) {
         int iterationCount = 0;

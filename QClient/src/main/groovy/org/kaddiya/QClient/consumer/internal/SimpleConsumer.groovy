@@ -16,13 +16,13 @@ class SimpleConsumer<T> extends BaseConsumer implements Consumer<T> {
     }
 
 
-    @Override
+    /*@Override
     Message consumeMessage() {
-       // this.poller.call();
+
     }
 
     @Override
     void registerAckFor(Message m) {
 
-    }
+    }*/
 }

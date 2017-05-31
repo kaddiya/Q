@@ -13,6 +13,7 @@ import org.kaddiya.QClient.consumer.models.SubscriptionRegistrationRequest
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 
 @CompileStatic
 @Slf4j
@@ -23,7 +24,7 @@ public class BaseConsumer extends AbstractBrokerAdapter {
     private final String consumerId
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
     ExecutorService executor = Executors.newFixedThreadPool(1);
-   // protected final MessagePoller poller;
+
     public BaseConsumer(String topicId, BrokerConfig cfg) {
         super(cfg, topicId)
         this.consumerId = UUID.randomUUID().toString();
@@ -33,10 +34,15 @@ public class BaseConsumer extends AbstractBrokerAdapter {
         Request httpReq = super.constructPostRequest(request, SUBSCRIPTION_CONFIRMATION_URL);
         interactWithBrokerOverNetworkWithRetries(httpReq);
 
-      //  poller = new MessagePoller<Message>(topicId);
-       // executor.submit(poller)
 
-
+        while (true) {
+            Request httpReq1 = constructGetRequest("consumer/" + topicId);
+            Object o = interactWithBrokerOverNetworkWithRetries(httpReq1);
+            Message m = o as Message
+            if (m!=null){
+                log.info(m.content)
+            }
+        }
     }
 
     @Override
@@ -47,6 +53,10 @@ public class BaseConsumer extends AbstractBrokerAdapter {
                 case 409:
                     throw new RegistrationException("Could not register the consumer with id" + this.consumerId);
                     break
+                case 500:
+                    throw new IllegalStateException("error encoutnered")
+                case 200:
+                    break;
                 default:
                     log.info(String.valueOf(res.code()))
             }
@@ -54,7 +64,7 @@ public class BaseConsumer extends AbstractBrokerAdapter {
         }
     }
 
-/*    class MessagePoller implements Callable<Message>{
+   class MessagePoller implements Callable<Message>{
 
         String topicId
         public MessagePoller(String topicId){
@@ -62,9 +72,7 @@ public class BaseConsumer extends AbstractBrokerAdapter {
         }
         @Override
         Message call() throws Exception {
-            Request httpReq = constructGetRequest("/consumer/"+topicId);
-            interactWithBrokerOverNetworkWithRetries(httpReq);
-
+            return null
         }
-    }*/
+    }
 }
