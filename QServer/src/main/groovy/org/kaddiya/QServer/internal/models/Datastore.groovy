@@ -1,10 +1,12 @@
 package org.kaddiya.QServer.internal.models
 
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
 
 
 @Slf4j
+@CompileStatic
 public class Datastore {
     private static Datastore datastore = new Datastore();
     private static Map<String, Topic> topics;
@@ -22,12 +24,17 @@ public class Datastore {
 
     }
 
-    public static synchronized void addMessageToTopic(String topicId, Message m) {
+    public Datastore getInstance(){
+        return this.datastore
+    }
+
+    public synchronized static void addMessageToTopic(String topicId, Message m) {
         Topic t = getTopicById(topicId)
         t.getQueue().add(m)
     }
 
-    public static synchronized Message getMessage(String topicId) {
-        return getTopicById(topicId).getQueue().take()
+    public synchronized static Message getMessage(String topicId) {
+        Message rsult = getTopicById(topicId).getQueue().remove()
+        return rsult;
     }
 }

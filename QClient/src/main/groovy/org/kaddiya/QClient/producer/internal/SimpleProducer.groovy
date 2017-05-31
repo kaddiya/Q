@@ -28,7 +28,7 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
             String payload = new Gson().toJson(m)
             PublishRequest request = new PublishRequest(payload,topicId)
             Request httpRequest = constructPostRequest(request,PRODUCER_URL)
-            doNetWorkStuffWithRetries(httpRequest)
+            interactWithBrokerOverNetworkWithRetries(httpRequest)
 
         } catch (IllegalStateException e) {
             log.error("error occured while publishing the message.Unless handled by the client,this message is lost for ever", e);
@@ -37,7 +37,7 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
     }
 
     @Override
-    protected void handleResponseFromBroker(Response res) {
+    protected boolean handleResponseFromBroker(Response res) {
         res.withCloseable {
             log.info("HTTP code received is {}",String.valueOf(res.code()))
             switch (res.code()) {
@@ -53,5 +53,6 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
             }
 
         }
+        return  true
     }
 }

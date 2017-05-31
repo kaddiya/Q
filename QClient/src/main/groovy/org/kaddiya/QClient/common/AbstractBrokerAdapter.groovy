@@ -42,13 +42,13 @@ public abstract class AbstractBrokerAdapter {
 
     }
 
-    protected abstract void handleResponseFromBroker(Response r)
+    protected abstract boolean handleResponseFromBroker(Response r)
 
-    private void makeHttpCall(Request request) {
+    private Boolean makeHttpCall(Request request) {
         Call c = this.httpClient.newCall(request);
         try {
             Response res = c.execute()
-            handleResponseFromBroker(res)
+            return  handleResponseFromBroker(res)
         } catch (Exception e) {
             throw new IllegalStateException("Could not execute the API call",e.getCause())
         }
@@ -65,12 +65,12 @@ public abstract class AbstractBrokerAdapter {
     }
 
 
-    protected void doNetWorkStuffWithRetries(Request request) {
+    protected Boolean interactWithBrokerOverNetworkWithRetries(Request request) {
         int iterationCount = 0;
         while (iterationCount <= MAX_RETRY_LIMIT) {
             iterationCount++
             try {
-                makeHttpCall(request)
+               return makeHttpCall(request)
 
             } catch (IOException | BrokerException |IllegalStateException e) {
                 log.error("Could not publish the message due to ", e)
@@ -87,6 +87,7 @@ public abstract class AbstractBrokerAdapter {
 
             }
         }
+        return true
 
     }
 }

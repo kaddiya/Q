@@ -43,7 +43,7 @@ public class BaseConsumer extends AbstractBrokerAdapter {
     }
 
     @Override
-    protected void handleResponseFromBroker(Response r) {
+    protected boolean handleResponseFromBroker(Response r) {
 
     }
 }
