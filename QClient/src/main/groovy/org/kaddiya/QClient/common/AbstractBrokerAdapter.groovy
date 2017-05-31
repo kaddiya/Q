@@ -46,12 +46,8 @@ public abstract class AbstractBrokerAdapter {
 
     private Boolean makeHttpCall(Request request) {
         Call c = this.httpClient.newCall(request);
-        try {
-            Response res = c.execute()
-            return  handleResponseFromBroker(res)
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not execute the API call",e.getCause())
-        }
+        Response res = c.execute()
+        return  this.handleResponseFromBroker(res)
 
     }
 
