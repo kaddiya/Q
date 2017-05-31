@@ -75,7 +75,7 @@ public abstract class AbstractBrokerAdapter {
             }
             catch (RetryableException e) {
                 iterationCount++
-                log.warn("Could not get response from broker due to " + e.getMessage())
+                log.debug("Could not get response from broker due to " + e.getMessage())
                 try {
                     //lets sleep for a while and see if world will be backl to normal when we get up!
                     Thread.sleep(((int) Math.round(Math.pow(2, iterationCount)) * 1000));
