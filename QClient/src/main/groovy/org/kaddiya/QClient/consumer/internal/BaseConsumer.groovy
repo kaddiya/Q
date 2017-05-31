@@ -71,7 +71,7 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
                 if (o != null) {
                     Message m = gson.fromJson(o as String, Message);
-                    marshallingCallback.call(m)
+                    marshallingCallback.call(m.content)
                 }
             } catch (IllegalStateException e) {
                 log.error("Could not get a message even after some retrying")
