@@ -1,5 +1,6 @@
 package org.kaddiya.QClient.consumer.internal
 
+import com.google.gson.Gson
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import okhttp3.Request
@@ -18,14 +19,16 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
     private final String consumerId
     private final String SUBSCRIPTION_CONFIRMATION_URL = "consumer_registration"
-    protected final Closure<T> marshallingCallback
+    protected final Closure<T> callback
     private List<String> depdenciesOfConsumers
+    protected final Class<T> contentClass
 
-    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries, Closure<T> callback) {
+    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries, Closure<T> callback, Class<T> contentClass) {
         super(cfg, topicId, retries)
         this.consumerId = UUID.randomUUID().toString();
         this.depdenciesOfConsumers = depdenciesOfConsumers
-        this.marshallingCallback = callback
+        this.callback = callback
+        this.contentClass = contentClass
 
         //set off by having to register a subscription request
         SubscriptionRegistrationRequest request = new SubscriptionRegistrationRequest(topicId, consumerId, depdenciesOfConsumers)
@@ -46,10 +49,10 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
             switch (res.code()) {
                 case 409:
-                    throw new RegistrationException("Could not register the consumer with id" + this.consumerId);
+                    throw new IllegalArgumentException("A consumer with " + this.consumerId+" has already been registered");
                     break
                 case 500:
-                    throw new IllegalStateException("error encountered")
+                    throw new IllegalStateException("unknown error encountered")
                 case 404:
                     throw new ConsumptionException("No message yet available")
                 case 200:
@@ -63,6 +66,10 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
         }
     }
 
+    private T marshallObjectFromMesage(String jsonContent) {
+        return new Gson().fromJson(jsonContent, this.contentClass);
+    }
+
 
     protected void longPollForMessageAndActOnMessage() {
         while (true) {
@@ -71,7 +78,8 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
                 if (o != null) {
                     Message m = gson.fromJson(o as String, Message);
-                    marshallingCallback.call(m.content)
+                    T result = marshallObjectFromMesage(m.content)
+                    callback.call(result);
                 }
             } catch (IllegalStateException e) {
                 log.error("Could not get a message even after some retrying")

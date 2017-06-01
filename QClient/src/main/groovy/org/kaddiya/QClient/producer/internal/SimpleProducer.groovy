@@ -32,13 +32,14 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
         } catch (IllegalStateException e) {
             log.error("error occured while publishing the message.Unless handled by the client,this message is lost for ever", e);
             throw new UnpublishableException("This message could not be published even after retrying")
+        } catch (IOException ioe) {
+            log.warn(CONNECTION_ERROR_MESSAGE, ioe.getMessage())
         }
     }
 
     @Override
     protected Object handleResponseFromBroker(Response res) {
         res.withCloseable {
-            log.info("HTTP code received is {}", String.valueOf(res.code()))
             switch (res.code()) {
                 case 507:
                     //thrown when the queue is full
