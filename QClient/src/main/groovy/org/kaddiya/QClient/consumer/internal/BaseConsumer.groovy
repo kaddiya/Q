@@ -49,10 +49,10 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
             switch (res.code()) {
                 case 409:
-                    throw new RegistrationException("Could not register the consumer with id" + this.consumerId);
+                    throw new IllegalArgumentException("A consumer with " + this.consumerId+" has already been registered");
                     break
                 case 500:
-                    throw new IllegalStateException("error encountered")
+                    throw new IllegalStateException("unknown error encountered")
                 case 404:
                     throw new ConsumptionException("No message yet available")
                 case 200:
