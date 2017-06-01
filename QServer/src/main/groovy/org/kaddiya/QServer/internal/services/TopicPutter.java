@@ -13,5 +13,5 @@ public interface TopicPutter {
 
     public void registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) throws RegistrationException;
 
-    public Message readMessageFromTopic(String topicId);
+    public Message readMessageFromTopic(String topicId,String consumerId);
 }

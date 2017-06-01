@@ -31,21 +31,17 @@ public class Datastore {
 
     public synchronized static void addMessageToTopic(String topicId, Message m) {
         Topic t = getTopicById(topicId)
-        t.getQueue().add(m)
+        t.addMessageToQueue(m);
     }
 
-    public synchronized static Message getMessage(String topicId) {
-        Message rsult = getTopicById(topicId).getQueue().remove()
-        return rsult;
-    }
-
-    public synchronized
-    static Boolean registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) {
+    //this method needs to be a part of the topic class
+    public synchronized static Message getMessage(String topicId,String consumerId) {
         Topic t = getTopicById(topicId)
-        if (t.getSubscriptions().containsKey(consumerId)) {
-            throw new RegistrationException("Consumer is already registered")
-        }
-        return t.getSubscriptions().put(consumerId, consumerDependencies)
+        return t.consumeMessage(consumerId)
+    }
 
+    public synchronized static void registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) {
+        Topic t = getTopicById(topicId)
+        t.registerSubscriptions(consumerId,consumerDependencies)
     }
 }

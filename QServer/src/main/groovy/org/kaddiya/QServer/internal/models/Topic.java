@@ -2,15 +2,14 @@ package org.kaddiya.QServer.internal.models;
 
 
 import org.kaddiya.QClient.common.Message;
+import org.kaddiya.QClient.consumer.models.RegistrationException;
 
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 
-public class Topic {
+public class Topic  {
 
     //every topic should have
     // the queue representation
@@ -28,4 +27,20 @@ public class Topic {
     public synchronized Map<String, List<String>> getSubscriptions() {
         return this.subscriptions;
     }
+
+    public synchronized void addMessageToQueue(Message m)  {
+            this.queue.add(m);
+    }
+
+    public  synchronized void registerSubscriptions(String consumerId,List<String>consumerDependencies) throws RegistrationException {
+        if (subscriptions.containsKey(consumerId)) {
+            throw new RegistrationException("Consumer is already registered");
+        }
+        this.subscriptions.put(consumerId, consumerDependencies);
+    }
+
+    public synchronized Message consumeMessage(String consumerId){
+        return (Message)queue.remove();
+    }
+
 }

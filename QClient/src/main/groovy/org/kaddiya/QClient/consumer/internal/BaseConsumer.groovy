@@ -73,7 +73,7 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
     protected void longPollForMessageAndActOnMessage() {
         while (true) {
-            Request request = constructGetRequest("consumer/" + topicId)
+            Request request = constructGetRequest("consumer/" + consumerId+"/"+topicId)
             try {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
                 if (o != null) {

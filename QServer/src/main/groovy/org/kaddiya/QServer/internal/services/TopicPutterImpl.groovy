@@ -28,9 +28,9 @@ public class TopicPutterImpl implements TopicPutter {
     }
 
     @Override
-    Message readMessageFromTopic(String topicId) {
+    Message readMessageFromTopic(String topicId,String consumerId) {
         try {
-            return Datastore.getMessage(topicId);
+            return Datastore.getMessage(topicId,consumerId)
         } catch (NoSuchElementException e) {
             throw new ResourceException(404, "No current Message is available for topic" + topicId)
         }
