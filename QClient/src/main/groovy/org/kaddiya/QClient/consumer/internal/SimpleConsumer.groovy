@@ -6,7 +6,7 @@ import org.kaddiya.QClient.common.BrokerConfig
 
 @CompileStatic
 @Slf4j
-class SimpleConsumer<T> extends BaseConsumer<T> {
+class SimpleConsumer<T> extends BaseConsumer<T> implements Consumer  {
 
 
     public SimpleConsumer(String topicId, BrokerConfig cfg, List<String> consumerDependencies, Closure<T> marshallingCallback, Class<T> contentClass) {
@@ -14,10 +14,10 @@ class SimpleConsumer<T> extends BaseConsumer<T> {
 
     }
 
+    @Override
     public void consumeMesage() {
         longPollForMessageAndActOnMessage();
     }
-
 
 }
 
