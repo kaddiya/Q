@@ -19,7 +19,7 @@ public class Datastore {
     private static Topic getTopicById(String topicId) {
         if (topics.get(topicId) == null) {
             log.warn("Topic with id {} not found.Creating one silenty", topicId)
-            topics.put(topicId, new Topic())
+            topics.put(topicId, new Topic(topicId))
         }
         return topics.get(topicId)
 
@@ -34,7 +34,7 @@ public class Datastore {
         t.addMessageToQueue(m);
     }
 
-    //this method needs to be a part of the topic class
+
     public synchronized static Message getMessage(String topicId,String consumerId) {
         Topic t = getTopicById(topicId)
         return t.consumeMessage(consumerId)

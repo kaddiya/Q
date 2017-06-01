@@ -30,6 +30,7 @@ public class TopicPutterImpl implements TopicPutter {
     @Override
     Message readMessageFromTopic(String topicId,String consumerId) {
         try {
+            log.info("in topic sevice")
             return Datastore.getMessage(topicId,consumerId)
         } catch (NoSuchElementException e) {
             throw new ResourceException(404, "No current Message is available for topic" + topicId)
