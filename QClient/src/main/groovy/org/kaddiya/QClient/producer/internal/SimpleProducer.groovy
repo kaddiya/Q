@@ -40,7 +40,6 @@ public class SimpleProducer extends AbstractBrokerAdapter implements Producer {
     @Override
     protected Object handleResponseFromBroker(Response res) {
         res.withCloseable {
-            log.info("HTTP code received is {}", String.valueOf(res.code()))
             switch (res.code()) {
                 case 507:
                     //thrown when the queue is full
