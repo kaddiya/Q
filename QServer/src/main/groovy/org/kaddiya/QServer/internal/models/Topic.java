@@ -15,7 +15,8 @@ public class Topic extends Observable {
     private String topicId;
     //every topic should have
     // the queue representation
-    private ArrayBlockingQueue queue = new ArrayBlockingQueue<Message>(10, true);
+
+    private ArrayBlockingQueue queue;
     //master list of all consumer
     private Map<UUID, MessageStatus> recievingLog = new HashMap<UUID, MessageStatus>();
     //multiplexer for each consumer
@@ -24,6 +25,11 @@ public class Topic extends Observable {
     private Map<String, List<String>> subscriptions = new Hashtable<String, List<String>>();
     public Topic(String topicId) {
         this.topicId = topicId;
+        String topicSize = System.getenv("TOPIC_SIZE");
+        if (topicSize == null || topicSize == ""){
+            throw new RuntimeException("Please specify the topic size");
+        }
+        queue = new ArrayBlockingQueue<Message>(10, true);
     }
 
     public synchronized void addMessageToQueue(Message m) {
