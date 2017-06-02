@@ -5,7 +5,7 @@ a JVM based poor man's In Memory Q supporting the following features
 3.Dependencies between consumers define the message consumption pattern.   
 
 
-# Requirements.  
+# Requirements:  
 1.To run this locally all one needs is a working installation of JDK 8.  
 
 2.Clone this repo.  
@@ -16,7 +16,8 @@ a JVM based poor man's In Memory Q supporting the following features
   - `BROKER_HOST` (Describing the address of the broker)  
   - `BROKER_PORT` (Describing the port to run at)  
   
-5.To run the Broker run `./gradlew clean appRun`.The broker will run at the specified port.  
+5.To run the Broker run `./gradlew clean appRun`.  
+The broker will run at the specified port and host.
 
 # Specifications:  
 1. Platform - Groovy/Java 8  
