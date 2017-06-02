@@ -17,27 +17,25 @@ public class Topic extends Observable {
     public Topic(String topicId){
         this.topicId=topicId;
     }
+
     //every topic should have
     // the queue representation
     private ArrayBlockingQueue queue = new ArrayBlockingQueue<Message>(10, true);
 
-    //multiplexer for each consumer
-    ///private List<Observer> consumers = new ArrayList<Observer>();
     //master list of all consumer
     private Map<UUID,MessageStatus> recievingLog = new HashMap<UUID, MessageStatus>();
 
+    //multiplexer for each consumer
     private Map<String,ConsumerMultiplexer> consumerMap = new HashMap<String, ConsumerMultiplexer>();
     //subscriptions
     private Map<String, List<String>> subscriptions = new Hashtable<String, List<String>>();
 
-    //this is the delivery /audit log
-  //  private Map<UUID,Map<String,MessageStatus>> deliveryLog = new HashMap<UUID, Map<String,MessageStatus>>();
 
 
     public synchronized void addMessageToQueue(Message m)  {
             //add message to queue
             this.queue.add(m);
-            //recievingLog.put(m.getUuid(),)
+
             setChanged();
             notifyObservers(m);
 

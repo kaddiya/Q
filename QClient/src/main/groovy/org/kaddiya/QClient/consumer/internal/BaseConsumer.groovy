@@ -62,7 +62,7 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                     log.info("The ack has been sucessfully registered")
                     break
                 case 403:
-                    throw new RegistrationException("Could not find the registration for this consumer Id.Please re-register")
+                    throw new RegistrationException("Could not find the registration for this consumer Id.Please re-register.The only way to re-register now is to restart")
                 case 200:
                     // since we know that in the consumer we are going to get in a string format return the response body as string when there is a 200
                     return res.body().string()

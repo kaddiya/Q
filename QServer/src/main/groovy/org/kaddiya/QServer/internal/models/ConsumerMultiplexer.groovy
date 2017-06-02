@@ -48,6 +48,7 @@ public class ConsumerMultiplexer implements Observer {
 
     public void ackMessage(UUID messageId){
         deliveryLog.put(messageId,MessageStatus.ACK)
+        log.info("consumer id "+ consumerId + " has Acknowledge this message "+messageId)
         consumerBuffer.remove();
     }
 
