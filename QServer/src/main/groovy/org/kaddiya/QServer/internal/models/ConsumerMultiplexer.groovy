@@ -11,20 +11,21 @@ import java.util.concurrent.TimeUnit
 @CompileStatic
 public class ConsumerMultiplexer implements Observer {
 
-    private LinkedBlockingQueue<Message> consumerBuffer = new LinkedBlockingQueue<Message>();
+    private final LinkedBlockingQueue<Message> consumerBuffer
 
     private String consumerId;
     private String topicId;
-    public ConsumerMultiplexer (String consumerId,String topicId){
+    public ConsumerMultiplexer (String consumerId,String topicId,LinkedBlockingQueue<Message> buffer){
         this.topicId = topicId;
         this.consumerId = consumerId;
-        log.info("A consumer multiplexer is setup for consumer "+consumerId+" and topic "+topicId)
+        this.consumerBuffer = buffer;
+        //log.info("A consumer multiplexer is setup for consumer "+consumerId+" and topic "+topicId)
     }
 
     @Override
     public void update(Observable o, Object arg) {
         try {
-            log.info("Added the message to"+consumerId+"buffer")
+          //  log.info("Added the message to"+consumerId+"buffer")
         } catch (InterruptedException e) {
             log.error("Could not cache the message for conusmerId"+consumerId)
         }

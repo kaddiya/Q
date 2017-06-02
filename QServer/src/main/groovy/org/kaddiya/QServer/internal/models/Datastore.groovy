@@ -44,4 +44,10 @@ public class Datastore {
         Topic t = getTopicById(topicId)
         t.registerSubscriptions(consumerId,consumerDependencies)
     }
+
+    public synchronized static Message registerAckfor(UUID messageId,String topicId){
+        Topic t = getTopicById(topicId)
+        log.info("Registering ack for"+messageId.toString())
+        return t.registerAck(messageId,topicId)
+    }
 }

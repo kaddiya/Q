@@ -4,8 +4,11 @@ import com.google.inject.Inject
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
-import org.kaddiya.QServer.internal.services.TopicPutterImpl
+import org.kaddiya.QClient.consumer.models.AckRequest
+import org.kaddiya.QServer.internal.services.TopicServiceImpl
+import org.restlet.data.Status
 import org.restlet.resource.Get
+import org.restlet.resource.Post
 import org.restlet.resource.ServerResource
 
 @Slf4j
@@ -14,17 +17,22 @@ class ConsumerController extends ServerResource {
 
 
     @Inject
-    TopicPutterImpl topicPutterImpl;
+    TopicServiceImpl topicPutterImpl;
 
     @Get
     public Message getMessage() {
         String topicId = request.getAttributes().get("topicId")
         String consumerId = request.getAttributes().get("consumerId")
         Message m =topicPutterImpl.readMessageFromTopic(topicId,consumerId)
-        log.info("getting message from topic ID " + m)
         return m
 
 
+    }
+
+    @Post
+    public Status registerAck(AckRequest request){
+        topicPutterImpl.registerAckFor(request.uuid,request.consumerId);
+        return Status.REDIRECTION_PERMANENT
     }
 
 

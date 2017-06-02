@@ -6,6 +6,8 @@ import org.kaddiya.QClient.consumer.models.RegistrationException;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Topic extends Observable {
@@ -19,11 +21,15 @@ public class Topic extends Observable {
     private ArrayBlockingQueue queue = new ArrayBlockingQueue<Message>(5, true);
 
     //multiplexer for each consumer
-    private List<Observer> consumerMultiplexer = new ArrayList<Observer>();
+    private List<Observer> consumers = new ArrayList<Observer>();
     //master list of all consumer
     private Map<String,ConsumerMultiplexer> consumerMap = new HashMap<String, ConsumerMultiplexer>();
     //subscriptions
     private Map<String, List<String>> subscriptions = new Hashtable<String, List<String>>();
+
+    //this is the delivery /audit log
+    private Map<UUID,Map<String,MessageStatus>> deliveryLog = new HashMap<UUID, Map<String,MessageStatus>>();
+
 
 
     public synchronized Map<String, List<String>> getSubscriptions() {
@@ -31,7 +37,9 @@ public class Topic extends Observable {
     }
 
     public synchronized void addMessageToQueue(Message m)  {
+            //add message to queue
             this.queue.add(m);
+            //log it in the delivery log
             setChanged();
             notifyObservers(m);
     }
@@ -42,9 +50,11 @@ public class Topic extends Observable {
         }
         //register the subscription
         this.subscriptions.put(consumerId, consumerDependencies);
+        //change the delivery log
         //multiplex the queue
-        ConsumerMultiplexer consumerBuffer = new ConsumerMultiplexer(consumerId,topicId);
-        this.consumerMultiplexer.add(consumerBuffer);
+        LinkedBlockingQueue<Message> history = new LinkedBlockingQueue<Message>(queue);
+        ConsumerMultiplexer consumerBuffer = new ConsumerMultiplexer(consumerId,topicId,history);
+        this.consumers.add(consumerBuffer);
         this.consumerMap.put(consumerId,consumerBuffer);
     }
 
@@ -52,7 +62,21 @@ public class Topic extends Observable {
         /*if(this.consumerMap.get(consumerId) !=null) {
             return this.consumerMap.get(consumerId).getMessage();
         }*/
-        return (Message)queue.remove();
+        //peek the first element and give it back.
+        return consumerMap.get(consumerId).getMessage();
+    }
+
+    public synchronized Message registerAck(UUID messageId ,String consumerId){
+        //register the ack for the message
+        //and then remove
+       /* System.out.println("While Ack the ssize is"+queue.size());
+        Iterator<Message> it = queue.iterator();
+        while (it.hasNext()){
+            Message m = it.next();
+            System.out.println("head is "+m.getContent());
+        }*/
+        return (Message) queue.peek();
+
     }
 
 }

@@ -9,7 +9,7 @@ import org.restlet.resource.ResourceException
 
 @Slf4j
 @CompileStatic
-public class TopicPutterImpl implements TopicPutter {
+public class TopicServiceImpl implements TopicService {
     @Override
     public boolean putInTopic(String topicId, Message m) {
 
@@ -30,12 +30,18 @@ public class TopicPutterImpl implements TopicPutter {
     @Override
     Message readMessageFromTopic(String topicId,String consumerId) {
         try {
-            log.info("in topic sevice")
             return Datastore.getMessage(topicId,consumerId)
         } catch (NoSuchElementException e) {
             throw new ResourceException(404, "No current Message is available for topic" + topicId)
         }
 
+
+    }
+
+    @Override
+    void registerAckFor(UUID messageId, String consumerId) {
+        log.info("Consumer "+consumerId +" is registering ack for message "+messageId.toString())
+        Datastore.registerAckfor(messageId,consumerId)
 
     }
 }
