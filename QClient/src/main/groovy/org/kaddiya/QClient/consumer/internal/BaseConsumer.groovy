@@ -25,9 +25,9 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
     private List<String> depdenciesOfConsumers
     protected final Class<T> contentClass
 
-    public BaseConsumer(String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries, Closure<T> callback, Class<T> contentClass) {
+    public BaseConsumer(String consumerId, String topicId, BrokerConfig cfg, List<String> depdenciesOfConsumers, Integer retries, Closure<T> callback, Class<T> contentClass) {
         super(cfg, topicId, retries)
-        this.consumerId = UUID.randomUUID().toString();
+        this.consumerId = consumerId
         this.depdenciesOfConsumers = depdenciesOfConsumers
         this.callback = callback
         this.contentClass = contentClass
@@ -49,10 +49,9 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
     @Override
     protected Object handleResponseFromBroker(Response res) {
         res.withCloseable {
-            log.info(""+res.code())
             switch (res.code()) {
                 case 409:
-                    throw new IllegalArgumentException("A consumer with " + this.consumerId+" has already been registered");
+                    throw new IllegalArgumentException("A consumer with " + this.consumerId + " has already been registered");
                     break
                 case 500:
                     throw new IllegalStateException("unknown error encountered")
@@ -68,7 +67,7 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                     return res.body().string()
                     break;
                 default:
-                    log.info(String.valueOf(res.code()))
+                    log.info("Unhandled Code Encountered : " + String.valueOf(res.code()))
             }
 
         }
@@ -81,31 +80,30 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
 
     protected void longPollForMessageAndActOnMessage() {
         while (true) {
-            Request request = constructGetRequest("consumer/" + consumerId+"/"+topicId)
+            Request request = constructGetRequest("consumer/" + consumerId + "/" + topicId)
             try {
                 Object o = interactWithBrokerOverNetworkWithRetries(request);
                 if (o != null) {
 
-                    try{
+                    try {
                         Message m = gson.fromJson(o as String, Message);
                         //if a message is recieved,
                         T result = marshallObjectFromMesage(m.content)
-                        if(result){
+                        if (result) {
                             AckRequest ack = new AckRequest(m.uuid);
-                            Request ackRequest = constructPostRequest(ack,"consumer/" + consumerId+"/"+topicId)
+                            Request ackRequest = constructPostRequest(ack, "consumer/" + consumerId + "/" + topicId)
                             interactWithBrokerOverNetworkWithRetries(ackRequest);
                             callback.call(result);
                         }
 
-                    }catch (JsonSyntaxException e){
+                    } catch (JsonSyntaxException e) {
                         log.warn("Cant recognise the message type")
                     }
 
 
-
                 }
             } catch (IllegalStateException e) {
-                log.error("could not interact with the broker even after trying",e)
+                log.error("could not interact with the broker even after trying", e)
             } catch (IOException ioe) {
                 log.warn(CONNECTION_ERROR_MESSAGE, ioe.getMessage())
             }

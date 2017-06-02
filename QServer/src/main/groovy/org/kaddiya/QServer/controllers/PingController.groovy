@@ -4,7 +4,6 @@ import org.restlet.resource.Get
 import org.restlet.resource.ServerResource
 
 
-
 class PingController extends ServerResource {
 
 

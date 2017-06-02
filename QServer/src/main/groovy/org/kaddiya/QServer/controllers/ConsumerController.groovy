@@ -25,24 +25,24 @@ class ConsumerController extends ServerResource {
     public Message getMessage() {
         String topicId = request.getAttributes().get("topicId")
         String consumerId = request.getAttributes().get("consumerId")
-        try{
-            Message m=topicPutterImpl.readMessageFromTopic(topicId,consumerId)
+        try {
+            Message m = topicPutterImpl.readMessageFromTopic(topicId, consumerId)
             return m
-        }catch (UnRegisteredException e){
-            throw new ResourceException(403,"The consumer is not authorised to subscribe")
+        } catch (UnRegisteredException e) {
+            throw new ResourceException(403, "The consumer is not authorised to subscribe")
         }
     }
 
     @Post
-    public Status registerAck(AckRequest ackRequest){
+    public Status registerAck(AckRequest ackRequest) {
         String topicId = request.getAttributes().get("topicId")
         String consumerId = request.getAttributes().get("consumerId")
 
-        try{
-            topicPutterImpl.registerAckFor(ackRequest.messageId,topicId,consumerId);
+        try {
+            topicPutterImpl.registerAckFor(ackRequest.messageId, topicId, consumerId);
             return Status.REDIRECTION_PERMANENT
-        }catch (UnRegisteredException e){
-            throw new ResourceException(403,"The consumer is not authorised to subscribe")
+        } catch (UnRegisteredException e) {
+            throw new ResourceException(403, "The consumer is not authorised to subscribe")
         }
 
 

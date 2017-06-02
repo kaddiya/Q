@@ -14,9 +14,9 @@ public class ConsumerMultiplexer implements Observer {
 
     private String consumerId;
     private String topicId;
-    private Map<UUID,MessageStatus> deliveryLog = new HashMap<UUID, MessageStatus>();
+    private Map<UUID, MessageStatus> deliveryLog = new HashMap<UUID, MessageStatus>();
 
-    public ConsumerMultiplexer (String consumerId,String topicId,LinkedBlockingQueue<Message> buffer){
+    public ConsumerMultiplexer(String consumerId, String topicId, LinkedBlockingQueue<Message> buffer) {
         this.topicId = topicId;
         this.consumerId = consumerId;
         this.consumerBuffer = buffer;
@@ -26,33 +26,33 @@ public class ConsumerMultiplexer implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         try {
-            deliveryLog.put((arg as Message).uuid,MessageStatus.RCVD)
-            consumerBuffer.add((Message)arg)
+            deliveryLog.put((arg as Message).uuid, MessageStatus.RCVD)
+            consumerBuffer.add((Message) arg)
         } catch (InterruptedException e) {
-            log.error("Could not cache the message for conusmerId"+consumerId)
+            log.error("Could not cache the message for conusmerId" + consumerId)
         }
     }
 
-    public Message getMessage(){
+    public Message getMessage() {
         try {
             Message m = consumerBuffer.peek();
-            if (m!=null){
-                deliveryLog.put(m.uuid,MessageStatus.READ)
+            if (m != null) {
+                deliveryLog.put(m.uuid, MessageStatus.READ)
                 return m
             }
-        }catch (InterruptedException e) {
-            log.error("Could not get the latest message for consumerId"+consumerId)
+        } catch (InterruptedException e) {
+            log.error("Could not get the latest message for consumerId" + consumerId)
         }
 
     }
 
-    public void ackMessage(UUID messageId){
-        deliveryLog.put(messageId,MessageStatus.ACK)
-        log.info("consumer id "+ consumerId + " has Acknowledge this message "+messageId)
+    public void ackMessage(UUID messageId) {
+        deliveryLog.put(messageId, MessageStatus.ACK)
+        log.info("consumer id " + consumerId + " has Acknowledge this message " + messageId)
         consumerBuffer.remove();
     }
 
-    public Boolean isAcked(UUID messageId){
+    public Boolean isAcked(UUID messageId) {
         return deliveryLog.get(messageId) == MessageStatus.ACK;
     }
 }

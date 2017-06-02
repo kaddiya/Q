@@ -33,18 +33,19 @@ public class Datastore {
     }
 
 
-    public synchronized static Message getMessage(String topicId,String consumerId) {
+    public synchronized static Message getMessage(String topicId, String consumerId) {
         Topic t = getTopicById(topicId)
         return t.consumeMessage(consumerId)
     }
 
-    public synchronized static void registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) {
+    public synchronized
+    static void registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) {
         Topic t = getTopicById(topicId)
-        t.registerSubscriptions(consumerId,consumerDependencies)
+        t.registerSubscriptions(consumerId, consumerDependencies)
     }
 
-    public synchronized static void registerAckfor(UUID messageId,String topicId,String consumerId){
+    public synchronized static void registerAckfor(UUID messageId, String topicId, String consumerId) {
         Topic t = getTopicById(topicId)
-        t.registerAck(messageId,consumerId)
+        t.registerAck(messageId, consumerId)
     }
 }

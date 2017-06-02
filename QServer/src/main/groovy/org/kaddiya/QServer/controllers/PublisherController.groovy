@@ -26,7 +26,7 @@ class PublisherController extends ServerResource {
             throw new ResourceException(400, "topic id missing")
         }
         putter.putInTopic(topicId, m)
-        log.info("Published message in with uuid"+m.uuid.toString())
+        log.info("Published message in with uuid" + m.uuid.toString())
         log.info("Published message in topic {} and content {}", topicId, content)
         return true;
     }

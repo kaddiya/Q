@@ -29,20 +29,20 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    Message readMessageFromTopic(String topicId,String consumerId) throws UnRegisteredException {
+    Message readMessageFromTopic(String topicId, String consumerId) throws UnRegisteredException {
         try {
-            return Datastore.getMessage(topicId,consumerId)
+            return Datastore.getMessage(topicId, consumerId)
         } catch (NoSuchElementException e) {
             throw new ResourceException(404, "No current Message is available for topic" + topicId)
-        }catch(DependantException e){
-            throw new ResourceException(206,e.getMessage())
+        } catch (DependantException e) {
+            throw new ResourceException(206, e.getMessage())
         }
 
 
     }
 
     @Override
-    void registerAckFor(UUID messageId,String topicId,String consumerId) throws UnRegisteredException {
-        Datastore.registerAckfor(messageId,topicId,consumerId)
+    void registerAckFor(UUID messageId, String topicId, String consumerId) throws UnRegisteredException {
+        Datastore.registerAckfor(messageId, topicId, consumerId)
     }
 }

@@ -15,7 +15,7 @@ public interface TopicService {
 
     public void registerSubscription(String topicId, String consumerId, List<String> consumerDependencies) throws DuplicateRegistrationException;
 
-    public Message readMessageFromTopic(String topicId,String consumerId) throws UnRegisteredException;
+    public Message readMessageFromTopic(String topicId, String consumerId) throws UnRegisteredException;
 
-    public void registerAckFor(UUID messageId,String topicId,String consumerId) throws UnRegisteredException;
+    public void registerAckFor(UUID messageId, String topicId, String consumerId) throws UnRegisteredException;
 }
