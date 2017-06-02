@@ -13,23 +13,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Topic extends Observable {
     private String topicId;
-
-    public Topic(String topicId) {
-        this.topicId = topicId;
-    }
-
     //every topic should have
     // the queue representation
     private ArrayBlockingQueue queue = new ArrayBlockingQueue<Message>(10, true);
-
     //master list of all consumer
     private Map<UUID, MessageStatus> recievingLog = new HashMap<UUID, MessageStatus>();
-
     //multiplexer for each consumer
     private Map<String, ConsumerMultiplexer> consumerMap = new HashMap<String, ConsumerMultiplexer>();
     //subscriptions
     private Map<String, List<String>> subscriptions = new Hashtable<String, List<String>>();
-
+    public Topic(String topicId) {
+        this.topicId = topicId;
+    }
 
     public synchronized void addMessageToQueue(Message m) {
         //add message to queue
