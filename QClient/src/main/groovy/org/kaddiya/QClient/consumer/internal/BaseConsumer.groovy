@@ -87,14 +87,11 @@ public class BaseConsumer<T> extends AbstractBrokerAdapter {
                     try{
                         Message m = gson.fromJson(o as String, Message);
                         //if a message is recieved,
-
                         T result = marshallObjectFromMesage(m.content)
                         if(result){
-                            AckRequest ack = new AckRequest(m.uuid,consumerId);
+                            AckRequest ack = new AckRequest(m.uuid);
                             Request ackRequest = constructPostRequest(ack,"consumer/" + consumerId+"/"+topicId)
-                            log.info("Going to  the message")
                             interactWithBrokerOverNetworkWithRetries(ackRequest);
-                            log.info("Acked the message")
                             callback.call(result);
                         }
 

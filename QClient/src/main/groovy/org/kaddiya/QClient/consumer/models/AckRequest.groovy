@@ -7,6 +7,5 @@ import groovy.transform.Immutable
  */
 @Immutable
 class AckRequest {
-    UUID uuid
-    String consumerId
+    UUID messageId
 }

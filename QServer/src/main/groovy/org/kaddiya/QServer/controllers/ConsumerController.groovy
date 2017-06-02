@@ -30,8 +30,10 @@ class ConsumerController extends ServerResource {
     }
 
     @Post
-    public Status registerAck(AckRequest request){
-        topicPutterImpl.registerAckFor(request.uuid,request.consumerId);
+    public Status registerAck(AckRequest ackRequest){
+        String topicId = request.getAttributes().get("topicId")
+        String consumerId = request.getAttributes().get("consumerId")
+        topicPutterImpl.registerAckFor(ackRequest.messageId,topicId,consumerId);
         return Status.REDIRECTION_PERMANENT
     }
 

@@ -16,5 +16,5 @@ public interface TopicService {
 
     public Message readMessageFromTopic(String topicId,String consumerId);
 
-    public void registerAckFor(UUID messageId,String consumerId);
+    public void registerAckFor(UUID messageId,String topicId,String consumerId);
 }
