@@ -25,7 +25,6 @@ public class ConsumerMultiplexer implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         try {
-            log.info("Added the message to"+consumerId+"buffer")
             consumerBuffer.add((Message)arg)
         } catch (InterruptedException e) {
             log.error("Could not cache the message for conusmerId"+consumerId)
@@ -35,7 +34,6 @@ public class ConsumerMultiplexer implements Observer {
     public Message getMessage(){
         try {
             Message m = consumerBuffer.remove();
-            log.info("Consumed the message to"+consumerId+"buffer")
             return m
         }catch (InterruptedException e) {
             log.error("Could not get the latest message for consumerId"+consumerId)

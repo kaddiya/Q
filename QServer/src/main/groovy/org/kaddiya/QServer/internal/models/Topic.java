@@ -56,7 +56,6 @@ public class Topic extends Observable {
     }
 
     public synchronized Message consumeMessage(String consumerId){
-        //remove the message
         return consumerMap.get(consumerId).getMessage();
     }
 

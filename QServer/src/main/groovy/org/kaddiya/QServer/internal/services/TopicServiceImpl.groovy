@@ -40,8 +40,6 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     void registerAckFor(UUID messageId,String topicId,String consumerId) {
-        log.info("Consumer "+consumerId +" is registering ack for message "+messageId.toString())
         Datastore.registerAckfor(messageId,topicId,consumerId)
-
     }
 }
