@@ -2,8 +2,8 @@ package org.kaddiya.QServer.controllers
 
 import com.google.inject.Inject
 import groovy.util.logging.Slf4j
-import org.kaddiya.QClient.consumer.models.RegistrationException
 import org.kaddiya.QClient.consumer.models.SubscriptionRegistrationRequest
+import org.kaddiya.QServer.internal.models.exceptions.DuplicateRegistrationException
 import org.kaddiya.QServer.internal.services.TopicServiceImpl
 import org.restlet.data.Status
 import org.restlet.resource.Post
@@ -20,7 +20,7 @@ class ConsumerRegistrationController extends ServerResource {
     public Status registerSubscription(SubscriptionRegistrationRequest request) {
         try {
             topicPutterImpl.registerSubscription(request.topicId, request.consumerId, request.depdenciesOfConsumers)
-        } catch (RegistrationException e) {
+        } catch (DuplicateRegistrationException e) {
             log.error("Recieved a duplicate request for registration", e)
             throw new ResourceException(409, "Duplicate registration request received")
 

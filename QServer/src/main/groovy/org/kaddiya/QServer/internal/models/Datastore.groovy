@@ -3,8 +3,6 @@ package org.kaddiya.QServer.internal.models
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
-import org.kaddiya.QClient.consumer.models.RegistrationException
-
 
 @Slf4j
 @CompileStatic

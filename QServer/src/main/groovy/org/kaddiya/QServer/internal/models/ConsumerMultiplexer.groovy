@@ -5,7 +5,6 @@ import groovy.util.logging.Slf4j
 import org.kaddiya.QClient.common.Message
 
 import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.TimeUnit
 
 @Slf4j
 @CompileStatic
@@ -15,16 +14,19 @@ public class ConsumerMultiplexer implements Observer {
 
     private String consumerId;
     private String topicId;
+    private Map<UUID,MessageStatus> deliveryLog = new HashMap<UUID, MessageStatus>();
+
     public ConsumerMultiplexer (String consumerId,String topicId,LinkedBlockingQueue<Message> buffer){
         this.topicId = topicId;
         this.consumerId = consumerId;
         this.consumerBuffer = buffer;
-        //log.info("A consumer multiplexer is setup for consumer "+consumerId+" and topic "+topicId)
+
     }
 
     @Override
     public void update(Observable o, Object arg) {
         try {
+            deliveryLog.put((arg as Message).uuid,MessageStatus.RCVD)
             consumerBuffer.add((Message)arg)
         } catch (InterruptedException e) {
             log.error("Could not cache the message for conusmerId"+consumerId)
@@ -33,11 +35,23 @@ public class ConsumerMultiplexer implements Observer {
 
     public Message getMessage(){
         try {
-            Message m = consumerBuffer.remove();
-            return m
+            Message m = consumerBuffer.peek();
+            if (m!=null){
+                deliveryLog.put(m.uuid,MessageStatus.READ)
+                return m
+            }
         }catch (InterruptedException e) {
             log.error("Could not get the latest message for consumerId"+consumerId)
         }
 
+    }
+
+    public void ackMessage(UUID messageId){
+        deliveryLog.put(messageId,MessageStatus.ACK)
+        consumerBuffer.remove();
+    }
+
+    public Boolean isAcked(UUID messageId){
+        return deliveryLog.get(messageId) == MessageStatus.ACK;
     }
 }
