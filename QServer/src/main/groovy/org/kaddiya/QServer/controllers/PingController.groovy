@@ -9,6 +9,6 @@ class PingController extends ServerResource {
 
     @Get
     public boolean ping() {
-        return pong
+        return "pong"
     }
 }

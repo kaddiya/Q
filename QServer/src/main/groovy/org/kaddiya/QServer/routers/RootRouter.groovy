@@ -13,6 +13,6 @@ class RootRouter extends RestlingRouter {
         attach("/ping", PingController)
         attach("/producer", PublisherController)
         attach("/consumer_registration", ConsumerRegistrationController)
-        attach("/consumer/{topicId}", ConsumerController)
+        attach("/consumer/{consumerId}/{topicId}", ConsumerController)
     }
 }
